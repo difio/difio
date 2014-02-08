@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Profile for {{ user }}{% endblock %}
+
+{% block content %}
+<div style="float:left;width:300px;margin-right:30px;margin-bottom:20px;">
+    <h2>Profile for {{ user }}</h2>
+
+    <table>
+        <tr><th class="vertical">Id</th><td id="userId">{{ user.id }}</td></tr>
+        <tr><th class="vertical">Username</th><td>{{ user.username }}</td></tr>
+        <tr><th class="vertical">Email</th><td>{{ user.email }}</td></tr>
+        <tr>
+            <th class="vertical">Notification</th>
+            <td>{% if profile.get_email_delay == 1 %}Daily{% endif%}</td>
+        </tr>
+    </table>
+</div>
+{% endblock content %}

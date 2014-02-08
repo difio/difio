@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load fqdn_url from fqdn_url %}
+{% block title %}Difio analytics{% endblock %}
+
+{% block content %}
+<br/>
+Difio provides multiple tests that are designed to test and verify
+conditions which are bad packaging practice, potential issues or
+known bugs.
+
+<br/><br/>
+
+Test results are displayed using a color code to represent the severity
+and a text result. Severity color codes are
+
+<br/><br/>
+
+<div class="INFO"   style="display:inline-block; padding-left:10px; width:45px;border: 1px solid #607d91;"><strong>INFO</strong></div>,
+<div class="PASS"   style="display:inline-block; padding-left:10px; width:45px;"><strong>PASS</strong</div>,
+<div class="VERIFY" style="display:inline-block; padding-left:10px; width:60px;"><strong>VERIFY</strong</div>,
+<div class="FAIL"   style="display:inline-block; padding-left:10px; width:45px;"><strong>FAIL</strong</div>.
+
+<ul>
+<li>
+<strong>INFO</strong> - light blue - the results are for informational purposes only.
+For example: <em>API diff</em> and <em>Full diff</em>;
+</li>
+<li>
+<strong>PASS</strong> - green - test case completed successfully and no issues were found;
+</li>
+
+<li>
+<strong>VERIFY</strong> - orange - pass or fail result could not be determined automatically.
+Manual inspection of test results is required. For example: <em>Modified files</em> - 
+it is not possible to automatically determine if the list of modified files
+is expected or not.
+</li>
+
+<li>
+<strong>FAIL</strong> - red - failure condition was found by the test case. The severity of
+the failure should be determined via manual inspection of the test result.
+For example: <em>Removed files</em>.
+</li>
+</ul>
+
+Severity boxes and text results may be click-able if they contain more lines.
+If this is the case the mouse cursor will change from a pointer to a hand.
+Clicking on the element will expand the full test results text.
+
+
+<h2>
+What tests are available
+</h2>
+
+<ul>
+<li>
+<strong>API diff</strong> - Difio generates API definition from the package
+source code. Class and method signatures are extracted and saved
+under the same file name as in original source code. API definitions
+between two package versions are compared and reported as standard diff.
+Common test case directories are omitted. Changes in API could be
+backward incompatible and result in application crash and runtime failures.
+API diff is currently available for <strong>Python</strong>,
+<strong>PHP</strong> and <strong>Java</strong>.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Full diff</strong> - this is the full git diff between two package versions.
+It is available for informational purposes.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Package Size Change</strong> - packages that change their size significantly
+can be a sign of
+a <a href="https://github.com/tschellenbach/Django-facebook/issues/262">corrupted build</a>.
+This test reports any size changes over 30%.
+See <a href="{% fqdn_url 'advisory' 'django-facebook-4.2.11' 'django-facebook-4.3.0' 12243 %}">
+DIFIO-12243
+</a> for example.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>File Size Change</strong> - inspects files which are present in both versions.
+Any size change that is both more than 20% and more than 20 KB or
+any file that changes from being zero-sized to non-zero sized, and vice-versa is reported.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Added non-text Files</strong> - new files are classified with libmagic.
+Any non-text file is reported.
+Bugs like <a href="https://code.djangoproject.com/ticket/19858">Django #19858</a> can
+be found with this test. For example
+see <a href="{% fqdn_url 'advisory' 'Django-1.4.3' 'Django-1.4.4' 12987 %}">
+DIFIO-12987
+</a>.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Modified Files</strong> - lists all modified files. You should manually review the
+list and inspect if unwanted files were modified.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Added Files</strong> - lists all newly added files. New files are usually resources, tests of new
+functionality. Manually inspect to verify additions are expected.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Removed Files</strong> - files in packages should be removed only if properly obsoleted or
+initial inclusion was a bug. Removing modules or parts of them can break the API.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Renamed Files</strong> - renaming files can break API. This test lists all renames
+between two versions.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Permissions Change</strong> - file permissions change (Linux/UNIX only) could indicate
+security issues. In a source package without executable programs permissions should
+not change.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Symlinks</strong> - this test traverses the entire package tree and reports any symlinks found.
+It will report FAIL if any symlinks exist in the new package.
+For example
+see <a href="{% fqdn_url 'advisory' 'factory_boy-1.2.0' 'factory_boy-2.0.0' 16005 %}">
+DIFIO-16005
+</a>.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>File Types Change</strong> - this test compares file types reported by libmagic between
+two package versions. Files should not be changing their type between updates.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Virus Scan</strong> - a virus scan is performed on the package using the ClamAV virus scanner.
+Even though it is unlikely that packages contain viruses, it's still important to know if anti
+virus tools will trigger false positives.
+</li>
+</ul>
+
+<ul>
+<li>
+<strong>Test Cases</strong> - this test reports any changes in test cases. It counts the number of available
+test case files in some well known locations. If new version is missing tests or has less
+then severity will be VERIFY or FAIL.
+</li>
+</ul>
+{% endblock %}

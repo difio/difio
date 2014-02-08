@@ -1,0 +1,104 @@
+{% load macros %}
+{% load fqdn_url from fqdn_url %}
+{% macro title %}{% block title %}{% endblock %}{% endmacro %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" id="html-main">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% usemacro title %}">
+
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}i/f.png" />
+    <link rel="shortcut icon" type="image/ico" href="{{ STATIC_URL }}i/f.ico" />
+    {% include "apps/dojo.html" with dialogs=1 highlight=0 %}
+    {% block head %}{% endblock %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/uservoice.js"></script>
+    <title>{% usemacro title %}</title>
+    <meta property="og:title" content="{% usemacro title %}" />
+    <meta property="og:site_name" content="Difio" />
+    <meta property="og:image" content="{{ STATIC_URL }}i/72.png" />
+
+    <link rel="alternate" type="application/rss+xml" title="Latest Updates" href="http://feeds.feedburner.com/difio/updates?format=xml" />
+    <style type="text/css">
+    @font-face {
+      font-family: 'Lobster';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Lobster'), url({{ STATIC_NOVER_URL }}fonts/lobster.woff) format('woff');
+    }
+    </style>
+    <link type="text/css" rel="stylesheet" media="screen" href="{{ STATIC_URL }}css/style.css" />
+    {% block analytics %}<script type="text/javascript" src="{{ STATIC_URL }}js/google_analytics.js"></script>{% endblock %}
+</head>
+<body {% block body %}{% endblock %}>
+{% block header %}
+    <header id="subheader">
+        <div class="toplevel">
+            <h1><a href="{% fqdn_url 'index' %}" class="logo">difio</a></h1>
+
+            <div class="navigation">
+                <div class="signin">
+                    <a href="{% fqdn_url 'dashboard' %}" class="button light_blue small">
+                    {% if user.is_authenticated %}
+                        Dashboard
+                    {% else %}
+                        Login
+                    {% endif %}
+                    </a>
+                </div>
+            </div>
+
+{% include "manual_import2.html" %}
+
+        </div>
+    </header> <!-- END subheader -->
+{% endblock %}
+
+    <div>
+        {% block content-top %}
+        {% endblock %}
+    </div>
+
+    <div id="content" {% block content_css_override %}{% endblock %}>
+        {% block left-sidebar %}
+        {% endblock %}
+        <div class="toplevel" {% block content_toplevel_css_override %}{% endblock %}>
+
+            {% if messages %}
+                <div id="messages" style="margin-top: 10px;">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}" style="padding-left: 10px;">{{ message.message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+
+            <div style="float: left; width: 100%">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <div id="content_bottom">
+                {% block content-bottom %}
+                {% endblock %}
+            </div>
+        </div>
+        {% block right-sidebar %}
+        {% endblock %}
+    </div> <!-- END FRONTPAGE -->
+{% block footer %}
+    <footer id="footer">
+        <div class="toplevel">
+            &copy;&nbsp;2012-2013&nbsp;difio
+&diams; <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="support" data-uv-primary-color="#415469" data-uv-link-color="#0068de" data-uv-support-tab_name="Feedback & Support">
+Support
+</a> &diams; <a href="https://github.com/difio/difio/issues/new">Report&nbsp;bug</a> &diams; <a href="http://twitter.com/DifioNews">Twitter</a> &diams; <a href="http://www.dif.io/blog">Blog</a>
+{% if user.is_authenticated %}
+ &diams; <a href="{% fqdn_url 'django.contrib.auth.views.logout' %}">Logout</a>
+{% endif %}
+        </div>
+    </footer>
+{% endblock %}
+</body>
+</html>

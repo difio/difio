@@ -1,0 +1,3 @@
+input.gsc-input, .gsc-input-box, .gsc-input-box-hover, .gsc-input-box-focus {border-color:#415469;}
+input.gsc-search-button, input.gsc-search-button:hover, input.gsc-search-button:focus {border-color:#415469;background-color:#415469;background-image: none;filter:none;}
+#cse-search-form {width:50%;margin-bottom:30px;}

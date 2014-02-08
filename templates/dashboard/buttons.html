@@ -1,0 +1,14 @@
+{% load fqdn_url from fqdn_url %}
+
+<div class="dashboard_buttons">
+    <a class="button medium green" href="#" onclick='dijit.byId("dlgRegister").show()'  ><strong>Add New App</strong></a>
+    <a class="button medium dark_blue" href="{% fqdn_url 'profiles_my_profile_detail' %}">Profile &amp; Billing</a>
+
+    <a class="button medium orange" href="#" onclick='dijit.byId("inviteFriends").show()'><strong>Invite Friends</strong></a>
+    <a class="button medium gray" href="#" onclick='dijit.byId("helpDlg").show()'      ><strong>Get Help</strong></a>
+
+    <a class="button medium gray" href="{% fqdn_url 'django.contrib.auth.views.logout' %}"><strong>Logout</strong></a>
+</div>
+{% include "dashboard/invite_friends.html" %}
+{% include "dashboard/help.html" %}
+

@@ -1,0 +1,20 @@
+{% load fqdn_url from fqdn_url %}
+{% for provider in social_auth.backends %}
+<a href="{% fqdn_url 'socialauth_begin' provider %}{% if next %}?next={{ next }}{% endif %}">
+  <img src="{{ STATIC_URL }}i/l/55/{{ provider|title|lower }}.png" alt="{{ provider|title }}" title="{{ provider|title }}" />
+</a>&nbsp;
+{% endfor %}
+<br /><br />
+
+<a href="#" onclick='dijit.byId("dlgForgot").show()'>Forgot which social account used to login?</a>
+
+<div id="dlgForgot" data-dojo-type="dojox.widget.Dialog" class="claro dialog" dimensions="[250,150]" style="display: none;background-color:inherit">
+<form id="reminderForm" action="{% fqdn_url 'ajax_reminder_social_provider' %}" method="post">
+    {% csrf_token %}
+    <label class="medium">Your email</label>
+    <input type="text" name="email" class="medium" style="width:80%;"/>
+    <input type="submit" value="Send" class="button dark_blue medium" />
+</form>
+</div>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/dojo/forgot.js"></script>

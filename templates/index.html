@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load fqdn_url from fqdn_url %}
+
+{% block head %}
+    <style type="text/css">
+    @font-face {
+      font-family: 'Russo One';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Russo One'), local('RussoOne-Regular'), url({{ STATIC_NOVER_URL }}fonts/russo-one.woff) format('woff');
+    }
+    </style>
+{% endblock %}
+
+{% block title %}Analyze open source changes - Difio{% endblock %}
+
+{% block content-top %}
+<div id="content_top" style="min-height: 225px;">
+    <div class="toplevel">
+        <div style="float: left; max-width: 450px;">
+            <div class="russo" style="font-size:30px;line-height:1.1em;"><em>Analyze open source changes</em></div>
+            <br /><br />
+<em>
+&quot;If an application works, any change in its libraries or the versions of those libraries can break the application.&quot; - virtualenv
+</em>
+        <br /><br />
+<strong>Difio keeps track of packages and tells you when they change.
+After reading the change analytics you can make informed decision when or what to upgrade.
+</strong>
+&nbsp;
+<a href="#" onclick='dijit.byId("dlgRegister").show()'>Add New App</a> or <a href="#features">Learn More.</a>
+        <br /><br />
+<div style="float: left">
+    <a style="position: relative; top:0; left: 0" href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.dif.io" data-via="DifioNews" data-counturl="http://www.dif.io">Tweet</a>
+    <div class="g-plusone" data-size="medium" style="width: 100px;"></div>
+
+    <div style="width: 100px; top: 1px;" class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-action="like"></div>
+    <div id="fb-root"></div>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/share.js"></script>
+</div>
+        </div>
+
+        <table style="float:right;top:10px">
+            {% include "apps/all_advisories_table.html" with object_list=context.updates truncate=1 %}
+            <tr>
+                <td colspan="2" style="border: none;">
+                    <h4 class="russo">{{ context.updates_count|default:11902 }} more analyzed</h4>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="features" style="position: relative; z-index: -10; top: 0px;"></div>
+    <div class="feature-box-left">
+<h4 class="russo">Change Analytics</h4>
+
+<img src="{{ STATIC_URL }}i/f/ch.png" alt="" class="framedimg popup" onclick='dijit.byId("dlgChlog").show()' />
+<div id="dlgChlog" data-dojo-type="dojox.widget.Dialog" class="claro dialog" dimensions="[820,435]" style="display: none;">
+    <img src="{{ STATIC_URL }}i/f/b/changelog.png" alt="" />
+</div>
+
+Compare arbitrary versions of software packages and see what changed
+between them.
+<br /><br />
+
+Supports unlimited applications with no restrictions on package count.
+Email and RSS notification available.
+<br /><br />
+
+Improves upgrades and test planning for critical applications!
+    </div>
+
+
+
+
+    <div class="feature-box-left">
+<h4 class="russo">Multiple Tests</h4>
+
+<img src="{{ STATIC_URL }}i/f/analytics.png" alt="" class="framedimg popup" onclick='dijit.byId("dlgAnalytics").show()' />
+<div id="dlgAnalytics" data-dojo-type="dojox.widget.Dialog" class="claro dialog" dimensions="[624,360]" style="display: none;">
+    <img src="{{ STATIC_URL }}i/f/b/analytics.png" alt="" />
+</div>
+
+Multiple <a href="{% fqdn_url 'analytics' %}">tests</a> are provided
+to detect bad packaging practices, potential issues or known bugs.
+<br /><br />
+
+Some of them are <em>API diff</em>, <em>Package Size Change</em>, <em>Added non-text Files</em>, <em>Virus Scan</em>, <em>Permissions Change</em>.
+<br /><br />
+
+See for example <a href="{% fqdn_url 'advisory' 'django-facebook-4.2.11' 'django-facebook-4.3.0' 12243 %}">DIFIO-12243</a>, <a href="{% fqdn_url 'advisory' 'Django-1.4.3' 'Django-1.4.4' 12987 %}">DIFIO-12987</a>, <a href="{% fqdn_url 'advisory' 'factory_boy-1.2.0' 'factory_boy-2.0.0' 16005 %}">DIFIO-16005</a>.
+    </div>
+
+
+
+
+    <div class="feature-box-left">
+<h4 class="russo">Open Source</h4>
+
+<img src="{{ STATIC_URL }}i/f/code.png" alt="" class="framedimg" />
+
+Difio is a Django based service developed the open source way!
+Everyone is welcome to join.
+<br /><br />
+
+Difio is working to open up all service components!
+Please be patient until we publish our code!
+<br /><br />
+
+Meanwhile stay tuned for announcements on <a href="https://groups.google.com/forum/#!forum/difio-devel">difio-devel</a>.
+    </div>
+
+
+
+
+    <div class="feature-box-left">
+<h4 class="russo">Pricing</h4>
+
+<img src="{{ STATIC_URL }}i/f/pricing.png" alt="" class="framedimg"/>
+
+To access analytics for packages older than 6 months or 1 year
+you need a <a href="{% fqdn_url 'profiles_my_profile_detail' %}">subscription</a>.
+<br /><br />
+
+Free for fresh packages! Upgrading your apps frequently will keep bugs
+away and avoid charges.
+<br /><br />
+
+
+The older the packages you use, the more you have to pay!
+    </div>
+
+
+<div class="packages">
+    <h4 class="russo" style="position:relative;top:-10px;background-color:#e7f5f8;width:60%;margin:0;margin-left:auto;margin-right:auto;text-align:center">Supported Packages</h4>
+
+    <img src="{{ STATIC_URL }}i/f/python.png" alt="Python" />
+    <img src="{{ STATIC_URL }}i/f/ruby.png" alt="Ruby" />
+    <img src="{{ STATIC_URL }}i/f/php.png" alt="PHP" /> 
+    <img src="{{ STATIC_URL }}i/f/perl.png" alt="Perl"/>
+    <img src="{{ STATIC_URL }}i/f/nodejs.png" alt="Node.js" /> 
+    <img src="{{ STATIC_URL }}i/f/java.png" alt="Java" />
+</div>
+
+<div style="float:left;margin-top:40px; width:100%;border-top:solid 1px #607d91">
+    <br/><br/>
+    <a href="#" onclick='dijit.byId("dlgRegister").show()' class="button green medium" style="margin-left:auto;margin-right:auto;width:150px;display:block;text-align:center;">
+        <strong>Add New App</strong>
+    </a>
+</div>
+
+
+{% endblock %}

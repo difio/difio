@@ -1,0 +1,11 @@
+{% load fqdn_url from fqdn_url %}
+<div id="inviteFriends" data-dojo-type="dojox.widget.Dialog" class="claro dialog" dimensions="[250,350]" style="display: none;background-color:inherit">
+<form id="inviteForm" action="{% fqdn_url 'ajax_invite_friends' %}" method="post">
+    {% csrf_token %}
+    <label>Email addresses to invite. One per line!</label><br />
+    <textarea name="recipients" style="width:90%; height:250px;">
+    {{ form.recipients.value }}
+    </textarea><br /><br />
+    <input type="submit" value="INVITE" class="button dark_blue medium" />
+</form>
+</div>

@@ -1,0 +1,12 @@
+{% load fqdn_url from fqdn_url %}
+<div id="dlgRegister" data-dojo-type="dojox.widget.Dialog" class="claro dialog" dimensions="[250,380]" style="display: none; background-color: inherit;">
+
+Select programming language and import application dependencies.<br/>
+
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_maven' %}?uuid={{ app.uuid }}"      >Java</a>
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_npm_ls' %}?uuid={{ app.uuid }}"     >Node.js</a>
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_perllocal' %}?uuid={{ app.uuid }}"  >Perl</a>
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_composer' %}?uuid={{ app.uuid }}"   >PHP</a>
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_pipfreeze' %}?uuid={{ app.uuid }}"  >Python</a>
+    <br/><a class="button medium light_blue" style="width: 150px;margin-bottom:10px;" href="{% fqdn_url 'import_bundle_list' %}?uuid={{ app.uuid }}">Ruby</a>
+</div>

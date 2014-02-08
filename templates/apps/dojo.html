@@ -1,0 +1,11 @@
+<style type="text/css">
+    @import "{{ STATIC_NOVER_URL }}dojo-1.7.2/dijit/themes/claro/claro.css";
+    {% if dialogs == 1 %}@import "{{ STATIC_NOVER_URL }}dojo-1.7.2/dojox/widget/Dialog/Dialog.css";{% endif %}
+</style>
+<script src="{{ STATIC_NOVER_URL }}dojo-1.7.2/dojo/dojo.js" data-dojo-config="'async':false,'parseOnLoad':true" type="text/javascript"></script>
+{% if dialogs == 1 %}<script type="text/javascript" src="{{ STATIC_URL }}js/dojo/require_dialog.js"></script>{% endif %}
+{% if highlight == 1 %}
+<script type="text/javascript" src="{{ STATIC_NOVER_URL }}highlight/highlight.pack.js"></script>
+<link rel="stylesheet" href="{{ STATIC_NOVER_URL }}highlight/styles/idea.css" />
+{% endif %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/dojo/update.js"></script>

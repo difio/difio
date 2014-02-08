@@ -1,0 +1,21 @@
+{% load fqdn_url from fqdn_url %}
+{% block subject %}{{ email_subject }}{% endblock %}
+{% block plain %}Good day {{ full_name|default:username }},
+there were new versions released for some of your application dependencies.
+
+Releases between {{ start_date|date:'Y-m-d' }} and {{ end_date|date:'Y-m-d' }}:
+{% for release in released_items %}
+* {{ release.nvr }} used in {{ release.apps }};
+{% endfor %}
+
+To review the analytics login to your dashboard at
+{% fqdn_url 'dashboard' %}
+
+As always, don't forget to refresh your package list stored at Difio
+so we can better keep track of relevant updates available to you!
+
+If you wish to change your notification preferences please visit
+{% fqdn_url 'profiles_my_profile_detail' %}
+
+{% include "templated_email/signature.email" %}
+{% endblock %}

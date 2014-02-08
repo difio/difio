@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load json_url from json_url %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/clearqs.js"></script>
+    <script type="text/javascript" src="{{ STATIC_NOVER_URL }}momentjs-2.0.0.min.js"></script>
+    {% include "apps/dojo.html" with dialogs=0 highlight=1 %}
+{% endblock %}
+{% block title %}{{ advisory.get_title }}{% endblock %}
+{% block body %}{% if is_admin != 1 %}onload="load_data('{% json_url advisory.get_path|add:'changelog.json' %}', {{ advisory.last_updated|date:'YmdHis' }}, true, true);"{% endif %}{% endblock %}
+
+{% block content-top %}
+<div id="content_top" style="min-height:30px;">
+    <div class="toplevel" style="float:left;">
+        <h2 style="margin:0;">Changes between {{ advisory.old }} and {{ advisory.new }}</h2>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<table style="float:left">
+  <tr>
+    <th class="vertical">Released on</th><td><a href="{{ advisory.old.package.index_url }}">{{ advisory.new.released_on|date:'d N Y' }}</a></td>
+  </tr>
+</table>
+
+<table style="float:left;margin-right:20px;">
+  <tr>
+    <th class="vertical">Change rate</th>
+        <td>
+            {{ advisory.severity_img|safe }}
+            &nbsp;{{ advisory.get_severity_display }}: {{ advisory.type }} %
+        </td>
+  </tr>
+</table>
+
+<div class="sharing" style="float:left;">
+<!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+        <a class="addthis_button_twitter"></a>
+        <a class="addthis_button_compact"></a>
+        <a class="addthis_counter addthis_bubble_style"></a>
+    </div>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50fb0d604eb24fd0"></script>
+<!-- AddThis Button END -->
+</div>
+
+{% include "apps/tabs.html" %}
+{% endblock %}
+
+{% block content-bottom %}
+<a name="comments">&nbsp;</a>
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="{{ STATIC_URL }}js/disqus.js"></script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+{% endblock %}

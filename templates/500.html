@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}500 - Internal Server Error{% endblock %}
+{% block content %}
+
+<h3>
+It looks like we're having some troubles!
+</h3>
+
+<img src="{{ STATIC_URL }}i/500.png" alt="500 - internal server error" />
+
+<div>
+Please <a href="https://github.com/difio/difio/issues/new">report a bug</a> and we will fix it.
+</div>
+
+{% endblock %}

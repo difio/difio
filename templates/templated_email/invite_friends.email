@@ -1,0 +1,27 @@
+{% block subject %}Difio invitation from {{ full_name|default:username }}{% endblock %}
+{% block plain %}
+Your friend {{ full_name|default:username }} is inviting you to join
+http://www.dif.io/
+
+Difio keeps track of packages and tells you when they change. After reading
+the change analytics you can make informed decision when or what to upgrade.
+Currently it works with Python, Ruby, Node.js, Perl, PHP and Java.
+
+
+Would you like to chat with us about your process of handling package updates?
+If so please answer the questions below.
+
+- How do you handle upgrades? What do you do when new versions of packages
+become available? How do you decide if the upgrade is worth the risk or
+not? Please describe your process.
+
+- Are there any particular problems you see(have seen) often or some major
+bugs that caused you troubles in the past? Links to bug trackers are greatly
+appreciated.
+
+We will not bother you again if you don't reply. No hard feeligns!
+
+
+{% include "templated_email/signature.email" %}
+
+{% endblock %}

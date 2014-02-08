@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}perllocal.pod import{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}<div class="error">{{ form.errors }}</div>{% endif %}
+
+<form action=".?uuid={{ uuid }}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>{{ form.perllocal.help_text|safe }}</label><br />
+    {{ form.perllocal }}
+
+    <input type="submit" value="Submit" class="button dark_blue small" />
+</form>
+{% endblock %}

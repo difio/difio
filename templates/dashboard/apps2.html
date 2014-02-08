@@ -1,0 +1,41 @@
+{% extends "dashboard/index.html" %}
+{% load fqdn_url from fqdn_url %}
+
+{% block stream_content %}
+    {% if not apps_data %}
+<h2>
+You don't have any applications yet!
+</h2>
+    {% else %}
+        <div id="userId" style="display:none;visibility:hidden;">{{ user.pk }}</div>
+
+        {% for a in apps_data %}
+            <div class="package dots" id="a{{ a.pk }}" style="min-height:75px;height:auto;overflow:auto;">
+                <div class="container">
+                    {% if a.status != -5 %}
+                    <div class="right50">
+                        {% if a.status == 0 %}
+                        <span class="button dark_blue small right50" style="margin-bottom:5px;" onClick="approveApplication({{ a.pk }}, '{% fqdn_url 'ajax_approve_app' %}')">approve</span>
+                        {% endif %}
+                        <span class="following button dark_blue small right50" onClick="deleteApplication({{ a.pk }}, '{% fqdn_url 'ajax_delete_application' %}')">delete</span>
+                    </div>
+                    {% endif %}
+                    <img src="{{ a.type_img_48_url }}" alt="{{ a.type }}" title="{{ a.type }}" style="margin-right:20px" />
+                    <span class="name"><a href="{% fqdn_url 'appdetails' a.pk %}">{{ a.name }}</a></span>
+                    <br/>
+                    <span class="url"><a href="{{ a.url|safe}}">{{ a.url|safe }}</a></span>
+                    <br/>
+                    <span>
+                        <span class="{% if a.outdated == 0 %}greenfg{% else %}redfg{% endif %}">
+                            {{ a.outdated }}
+                        </span> of <span class="grayfg">{{ a.total }}</span> packages
+                        are outdated
+                        and <span class="{% if a.old == 0 %}greenfg{% else %}orangefg{% endif %}">{{ a.old }}</span> are
+                        older than <span class="grayfg">1</span> year!
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+
+    {% endif %}
+{% endblock %}

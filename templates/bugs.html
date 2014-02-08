@@ -1,0 +1,12 @@
+<ul>
+{% for bug in bugs %}
+<li {% if is_admin %}id="bug{{ bug.id }}"{% endif %}>
+{% if is_admin %}
+<div style="width: 100px; display:inline-block;{% if not bug.reported_on or bug.reported_on > end_date %}background-color:red;{% endif %}">{{ bug.reported_on|date:'Y-m-d'|default:'None' }}</div>&nbsp;&nbsp;
+<div style="width: 100px; display:inline-block;{% if not bug.closed_on or bug.closed_on < start_date or bug.closed_on > end_date %}background-color:red;{% endif %}">{{ bug.closed_on|date:'Y-m-d'|default:'None' }}</div>&nbsp;&nbsp;
+<div style="width: 100px; display:inline-block;">{{ bug.context }}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+<div class="button small light_blue" onClick='delete_bug({{ advisory_id }}, {{ bug.pk }}, "{{ postUrl }}")'>DEL</div>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{% endif %}
+<a href="{{ bug.url }}">{{ bug.number }}</a> - {{ bug.title|safe }}</li>
+{% endfor %}
+</ul>

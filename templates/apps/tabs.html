@@ -1,0 +1,25 @@
+{% load json_url from json_url %}
+{% load json_base_url from json_url %}
+
+<div style="float:left;width:100%;margin-bottom:10px">
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'changelog.json' %}', {{ advisory.last_updated|date:'YmdHis' }}, true, true);">CHANGELOG</div>&nbsp;
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'commit_log.json'%}', {{ advisory.last_updated|date:'YmdHis' }}, true, false);">COMMITS</div>&nbsp;
+{% if is_admin != 1 %}
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'bugs.json' %}', {{ advisory.last_updated|date:'YmdHis' }}, false, false);">BUGS</div>&nbsp;
+{% else %}
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'api_diff.json' %}', {{ advisory.last_updated|date:'YmdHis' }}, true, true);">API DIFF</div>&nbsp;
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'full_diff.json'%}', {{ advisory.last_updated|date:'YmdHis' }}, true, true);">DIFF</div>&nbsp;
+<a href="#bugs" class="button light_blue small">BUGS</a>&nbsp;
+<script type="text/javascript" src="{{ STATIC_NOVER_URL }}momentjs-2.0.0.min.js"></script>
+{% endif %}
+<div class="button light_blue small" onClick="load_data('{% json_url advisory.get_path|add:'more.json' %}', {{ advisory.last_updated|date:'YmdHis' }}, true, true, '{% json_base_url advisory.get_path|add:'more.json' %}');">MORE TESTS</div>&nbsp;
+</div>
+
+<div id="jsonLoading"><img src="{{ STATIC_URL }}i/loading.gif" alt="loading ..." /></div>
+<div id="jsonContent"></div>
+
+{% if is_admin == 1 %}
+<div id="bugs">
+{{ bugs|safe }}
+</div>
+{% endif %}

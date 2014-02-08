@@ -1,0 +1,13 @@
+{% block subject %}Login reminder from Difio{% endblock %}
+{% block plain %}
+Hey there,
+somebody, probably you, has forgotten which social account they used to
+login at Difio <http://www.dif.io> and provided this email address!
+
+We found these social account providers associated with your profile:
+{% for p in providers %}{{ p }}
+{% endfor %}
+
+{% include "templated_email/signature.email" %}
+
+{% endblock %}

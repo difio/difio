@@ -1,0 +1,15 @@
+{% load fqdn_url from fqdn_url %}
+{% for adv in object_list %}
+    <tr>
+        <td>
+            <img src="{{ STATIC_URL }}i/s/{{ adv.severity }}.png" alt="{{ adv.get_severity_display }} : {{ adv.type }} %" title="{{ adv.get_severity_display }} : {{ adv.type }} %" />
+        </td>
+        <td>
+            {% if truncate %}
+                <a href="{% fqdn_url 'advisory' adv.old adv.new adv.id %}">{{ adv|truncatechars:50 }}</a>
+            {% else %}
+                <a href="{% fqdn_url 'advisory' adv.old adv.new adv.id %}">{{ adv }}</a>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

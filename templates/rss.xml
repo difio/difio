@@ -1,0 +1,25 @@
+{% load fqdn_url from fqdn_url %}<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>Latest Updates - Difio</title>
+<link>{% fqdn_url 'index' %}</link>
+<description>
+Difio keeps track of packages and tells you when they change.
+After reading the change analytics you can make informed decision when or what to upgrade.
+</description>
+<language>en</language>
+{% for update in context %}
+<item>
+<title>{{ update.get_title }}</title>
+<link>{% fqdn_url 'advisory' update.old update.new update.id %}</link>
+<guid>{% fqdn_url 'advisory' update.old update.new update.id %}</guid>
+<description>
+Package type: {{ update.old.package.get_type_display }} &lt;br /&gt;
+Code change: {{ update.type }} % - {{ update.get_severity_display }} &lt;br /&gt;
+Relased on: {{ update.new.released_on|date:'Y-m-d' }}   &lt;br /&gt;
+</description>
+<pubDate>{{ update.last_updated|date:'D, d M Y H:i:s O' }}</pubDate>
+</item>
+{% endfor %}
+</channel>
+</rss>

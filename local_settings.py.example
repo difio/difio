@@ -1,0 +1,177 @@
+################################################################################
+#
+#   Copyright (c) 2013, Alexander Todorov <atodorov@nospam.dif.io>
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+################################################################################
+
+
+
+#####  You may want to move this file to local_settings/, see settings.py
+
+
+import os
+
+APPLICATION_DIR = os.path.dirname(os.path.realpath(__file__))
+
+
+##### Default protocol and domain name settings
+# used in fqdn_url tag!
+FQDN="https://localhost.localdomain"
+
+
+
+##### DEBUG SETTINGS
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+
+
+# NB: used for email/error reporting. Valid addresses only.
+ADMINS = (
+    ('Your Name', 'admin@example.com'),
+)
+
+# Also used in AWS SES
+DEFAULT_FROM_EMAIL = 'info@example.com'
+
+# Used for error reporting to admins
+# NB: needs to be verified in Amazon SES
+SERVER_EMAIL = 'django@example.com'
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'xxxxxxxxxxxxxx',
+        'USER': 'xxxxxxxxxxxxxx',
+        'PASSWORD': 'xxxxxxxxxx',
+        'HOST': 'db.example.com',
+    },
+}
+
+
+# see https://www.djangoproject.com/weblog/2013/feb/19/security/
+# https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
+# added in Django 1.4.4
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "example.com"]
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+DEFAULT_S3_PATH = "media"
+
+
+# django storages settings
+AWS_S3_ACCESS_KEY_ID='xxxxxxxxxxxxxxxxxxxx'
+AWS_S3_SECRET_ACCESS_KEY='xxxxxxxxxxxxxxxx'
+AWS_STORAGE_BUCKET_NAME='www.example.com'
+
+
+
+##### STATIC FILES SETTINGS
+STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'
+# local development
+if DEBUG:
+    STATIC_DOMAIN = ''
+else:
+    STATIC_DOMAIN = '//example.com.cloudfront.net'
+
+STATIC_S3_PATH = 'static/vXX/'
+STATIC_NOVER_PATH = 'static/nv/'
+STATIC_URL       = '%s/%s' % (STATIC_DOMAIN, STATIC_S3_PATH)
+STATIC_NOVER_URL = '%s/%s' % (STATIC_DOMAIN, STATIC_NOVER_PATH)
+
+STATICFILES_DIRS = ()
+
+# used to locally serve static files
+if DEBUG:
+    STATICFILES_DIRS += (os.path.join(APPLICATION_DIR, '..', STATIC_NOVER_PATH),)
+
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = None # TODO: Generate your own
+
+# TODO: define any additional apps here. For example user/profile handling
+INSTALLED_APPS = ()
+
+# Accept only SSL connections
+SESSION_COOKIE_SECURE = True
+
+# Amazon Simple Email Service settings
+AWS_SES_ACCESS_KEY_ID = 'xxxxxxxxxxxxxxxxxxxx'
+AWS_SES_SECRET_ACCESS_KEY = 'xxxxxxxxxxxxxxxx'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+
+
+##### AUTH SETTINGS
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# user profiles settings
+AUTH_PROFILE_MODULE = None # TODO: Define your own
+
+
+
+##### RubyGems.org API key
+RUBYGEMS_API_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
+
+
+##### Celery settings
+BROKER_USE_SSL = True
+BROKER_TRANSPORT_OPTIONS = {
+    'region': 'us-east-1',
+}
+BROKER_URL = "sqs://xxxxx:yyyyyyyyyyyyyyy@"
+
+
+
+##### CACHE SETTINGS
+CACHES = {
+# Cache used for temporary objects like email hashes
+# used for address verification
+    'default': {
+        'BACKEND': 's3cache.AmazonS3Cache',
+        'TIMEOUT' : 60*60*24*30, # 1 month timeout since we set/delete cache keys explicitly
+        'OPTIONS': {
+            'MAX_ENTRIES' : 1000,
+            'ACCESS_KEY_ID': 'XXXXXXXXXXXXXXXXXXXX',
+            'SECRET_ACCESS_KEY' : 'xxxxxxxxxxxxxxx',
+            'STORAGE_BUCKET_NAME': 'YYYYYYYYYYYYYY',
+            'REDUCED_REDUNDANCY' : True,
+            'LOCATION' : 'default',
+        }
+    },
+# Cache used to pass larger objects to tasks to avoid
+# hitting SQS message size limit. Uses different sub-path
+    'taskq': {
+        'BACKEND': 's3cache.AmazonS3Cache',
+        'TIMEOUT' : 60*60*24, # 1 day timeout
+        'OPTIONS': {
+            'MAX_ENTRIES' : 1000,
+            'ACCESS_KEY_ID': 'XXXXXXXXXXXXXXXXXXXX',
+            'SECRET_ACCESS_KEY' : 'xxxxxxxxxxxxxxx',
+            'STORAGE_BUCKET_NAME': 'YYYYYYYYYYYYYY',
+            'REDUCED_REDUNDANCY' : True,
+            'LOCATION' : 'taskq',
+        }
+    },
+}
+
+# when DEBUG is True (usually local development)
+# then use dummy cache, which doesn't actually do nothing
+if DEBUG:
+    CACHES['default']['BACKEND'] = 'django.core.cache.backends.dummy.DummyCache'
