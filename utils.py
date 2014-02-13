@@ -944,7 +944,8 @@ def get_bugs_as_html(advisory_id, is_admin=False):
                             }
                     )
 
-    return html_minify(response.content)
+#    return html_minify(response.content)
+    return response.content # latest htmlmin is worse than older versions
 
 
 def get_test_dirs():

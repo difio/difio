@@ -1204,7 +1204,8 @@ def generate_static_pages(ignore_present = True):
 # messing up with older analytics.
 #        request.path = adv_path
 #        response = views.advisory(request, adv.old, adv.new, adv.id)
-#        _create_file(HTML_ROOT + request.path + 'index.html', html_minify(response.content))
+##        _create_file(HTML_ROOT + request.path + 'index.html', html_minify(response.content))
+#        _create_file(HTML_ROOT + request.path + 'index.html', response.content) # latest htmlmin is worse than older
 
         count += 1
         if adv.id > top_id:
@@ -1241,7 +1242,8 @@ def generate_static_pages(ignore_present = True):
     for key in VIEWS:
         request.path = '/%s/' % key
         response = VIEWS[key](request)
-        _create_file(HTML_ROOT + key + '/index.html', html_minify(response.content))
+#        _create_file(HTML_ROOT + key + '/index.html', html_minify(response.content))
+        _create_file(HTML_ROOT + key + '/index.html', response.content) # latest htmlmin is worse than older versions
 
     # render robots.txt as a file, not directory
     # DON'T MINIFY

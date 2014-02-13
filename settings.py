@@ -119,13 +119,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'htmlmin.middleware.HtmlMinifyMiddleware',
+#    'htmlmin.middleware.HtmlMinifyMiddleware',
 )
 
 
 
 # by default HTML minify
-HTML_MINIFY = True
+HTML_MINIFY = False # latest htmlmin is worse than older versions
 
 
 
