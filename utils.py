@@ -366,6 +366,8 @@ def which_tag(version, tags, name = None, reverse=False):
         for (f, r) in tag_formats:
             if t == f % version:
                 return tags[t]
+            elif t.lower() == (f % version).lower(): # reportlab vs. ReportLab_0_3
+                return tags[t]                     # should also match the bottom .upper()
             elif t == f % version.upper(): # 1.7.0.rc2 => 1.7.0.RC2
                 return tags[t]
             elif t == f % version+'.0': # ngram 3.2 => tag 3.2.0
