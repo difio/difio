@@ -42,7 +42,8 @@ def extract_bug_numbers(alist):
         for known in [
                         'UTF-', 'CVE-', 'ASCII-', 'ISO-', 'PEP-',
                         'GMT-', 'RDS-', 'SQS-', 'EMR-', 'ECMA-', 
-                        'SHA-', 'RFC-', 'DB-', 'IAM-', 'UTC-'
+                        'SHA-', 'RFC-', 'DB-', 'IAM-', 'UTC-', 'D-',
+                        'KL-'
                     ]:
             if context.lower().find(known.lower()) > -1:
                 known_found = True
