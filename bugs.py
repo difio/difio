@@ -39,7 +39,11 @@ def extract_bug_numbers(alist):
     for context in alist:
         # skip well known failures
         known_found = False
-        for known in ['UTF-', 'CVE-', 'ASCII-', 'ISO-', 'PEP-', 'GMT-', 'RDS-', 'SQS-', 'EMR-', 'ECMA-', 'SHA-', 'RFC-', 'DB-', 'IAM-']:
+        for known in [
+                        'UTF-', 'CVE-', 'ASCII-', 'ISO-', 'PEP-',
+                        'GMT-', 'RDS-', 'SQS-', 'EMR-', 'ECMA-', 
+                        'SHA-', 'RFC-', 'DB-', 'IAM-', 'UTC-'
+                    ]:
             if context.lower().find(known.lower()) > -1:
                 known_found = True
                 break
