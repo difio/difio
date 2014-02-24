@@ -27,19 +27,14 @@
 <strong>Difio keeps track of packages and tells you when they change.
 After reading the change analytics you can make informed decision when or what to upgrade.
 </strong>
-&nbsp;
-<a href="#" onclick='dijit.byId("dlgRegister").show()'>Add New App</a> or <a href="#features">Learn More.</a>
-        <br /><br />
-<div style="float: left">
-    <a style="position: relative; top:0; left: 0" href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.dif.io" data-via="DifioNews" data-counturl="http://www.dif.io">Tweet</a>
-    <div class="g-plusone" data-size="medium" style="width: 100px;"></div>
+<br/><br/>
+<a class="button small green" href="#" onclick='dijit.byId("dlgRegister").show()'>
+<strong>Add New App</strong>
+</a> or <a href="#features">Learn More.</a>
 
-    <div style="width: 100px; top: 1px;" class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-action="like"></div>
-    <div id="fb-root"></div>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/share.js"></script>
-</div>
         </div>
 
+    <div style="float:right;">
         <table style="float:right;top:10px">
             {% include "apps/all_advisories_table.html" with object_list=context.updates truncate=1 %}
             <tr>
@@ -48,6 +43,20 @@ After reading the change analytics you can make informed decision when or what t
                 </td>
             </tr>
         </table>
+
+        <div class="sharing">
+        <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_default_style">
+                <a class="addthis_button_twitter"></a>
+                <a class="addthis_button_google_plusone_share"></a>
+                <a class="addthis_button_facebook"></a>
+                <a class="addthis_button_compact"></a>
+                <a class="addthis_counter addthis_bubble_style"></a>
+            </div>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50fb0d604eb24fd0"></script>
+        <!-- AddThis Button END -->
+        </div>
+    </div>
 
     </div>
 </div>
