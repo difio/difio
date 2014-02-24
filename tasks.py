@@ -1235,7 +1235,6 @@ def generate_static_pages(ignore_present = True):
     VIEWS = {
                 urls.URL_INDEX : views.index,
                 urls.URL_SEARCH : views.search_results,
-                '404' : views.view_404,
                 urls.URL_ANALYTICS : views.analytics,
             }
 
@@ -1244,12 +1243,6 @@ def generate_static_pages(ignore_present = True):
         response = VIEWS[key](request)
 #        _create_file(HTML_ROOT + key + '/index.html', html_minify(response.content))
         _create_file(HTML_ROOT + key + '/index.html', response.content) # latest htmlmin is worse than older versions
-
-    # render robots.txt as a file, not directory
-    # DON'T MINIFY
-    request.path = '/%s' % urls.URL_ROBOTSTXT
-    response = views.view_robotstxt(request)
-    _create_file(HTML_ROOT + urls.URL_ROBOTSTXT, response.content)
 
 
     reset_queries()

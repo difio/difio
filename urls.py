@@ -27,11 +27,7 @@ from django.conf.urls import patterns, include, url
 URL_INDEX = ''
 from utils import URL_ADVISORIES
 URL_SEARCH = 'search'
-URL_ROBOTSTXT = 'robots.txt'
 URL_ANALYTICS = 'analytics'
-
-handler404 = 'difio.views.view_404'
-handler500 = 'difio.views.view_500'
 
 urlpatterns = patterns('',
     url(r'^%s$' % URL_INDEX, 'difio.views.index', name='index'),
@@ -72,27 +68,7 @@ urlpatterns = patterns('',
     url(r'^applications/(?P<id>\d+)/$', 'difio.views.appdetails', name='appdetails'),
     url(r'^applications/history/(?P<id>\d+)/$', 'difio.views.app_history', name='app_history'),
 
-    # static urls
-    url(r'^%s$' % URL_ROBOTSTXT,  'difio.views.view_robotstxt', name='robotstxt'),
-
-    # user handling
-    # NB: must match settings.py
-    url(r'^login/$', auth_views.login, {'template_name': 'registration/login-social.html', 'extra_context' : {'STATIC_NOVER_URL':STATIC_NOVER_URL}}, name='auth_login'),
-    url(r'^logout/$', auth_views.logout, {'template_name': 'registration/logout.html', 'extra_context' : {'STATIC_NOVER_URL':STATIC_NOVER_URL}}, name='auth_logout'),
-    url(r'^login-error/$', 'difio.views.error', name='login_error'),
-
-    # django admin pages
-    url(r'^admin/', include(admin.site.urls)),
-)
-
-try:
-    import local_urls
-    urlpatterns += local_urls.urlpatterns
-except:
-    pass
-
 # if this URL path is not overriden in local_urls.py (Django uses first-match) then show
 # a mock profile view. NB: KEEP `name' the same b/c is used through out the templates
-urlpatterns += patterns('',
     url(r'^profiles/mine/$', 'difio.views.mock_profile_details', name='profiles_my_profile_detail'),
 )

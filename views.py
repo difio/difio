@@ -48,56 +48,11 @@ from social_auth.models import UserSocialAuth
 from templated_email import send_templated_mail
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
-from htmlmin.decorators import not_minified_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-def error(request):
-    """Error view"""
-    mesgs = messages.api.get_messages(request)
-    return render_to_response('registration/error-social-login.html',
-                              {'messages': mesgs, 'STATIC_NOVER_URL' : STATIC_NOVER_URL},
-                              RequestContext(request)
-                             )
-
-def view_500(request):
-    """500 ISE view"""
-    response = render_to_response('500.html',
-                              {'STATIC_NOVER_URL' : STATIC_NOVER_URL},
-                              RequestContext(request)
-                             )
-    response.status_code = 500
-
-    # prevent Amazon CloudFront from caching this response
-    response['Cache-Control'] = 'no-cache, no-store'
-    response['Expires'] = (datetime.now()-timedelta(days=1)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-
-    return response
-
-def view_404(request):
-    """404 Not Found view"""
-    response = render_to_response('404.html',
-                              {'STATIC_NOVER_URL' : STATIC_NOVER_URL},
-                              RequestContext(request)
-                             )
-    response.status_code = 404
-
-    # prevent Amazon CloudFront from caching this response
-    response['Cache-Control'] = 'no-cache, no-store'
-    response['Expires'] = (datetime.now()-timedelta(days=1)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-
-    return response
-
-
 def analytics(request):
     return render(request, 'analytics.html', {'STATIC_NOVER_URL' : STATIC_NOVER_URL})
-
-
-@not_minified_response
-def view_robotstxt(request):
-    """ Render robots.txt """
-    return render_to_response('robots.txt', {}, context_instance=RequestContext(request), mimetype='text/plain')
-
 
 def index(request):
     """
