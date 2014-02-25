@@ -7,7 +7,6 @@ django-celery
 django-htmlmin
 django-ratelimit
 django-s3-folder-storage
-django-ses
 django-storages
 django-templated-email
 mercurial

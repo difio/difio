@@ -44,3 +44,99 @@ How to install
     $ git clone https://github.com/difio/difio
     $ pip install -r difio/requirements.txt
 
+Configure `urls.py`:
+
+    url(r'^difio/', include('difio.urls')),
+
+Configure `settings.py`:
+
+``` python
+import djcelery
+djcelery.setup_loader()
+
+from boto.s3.connection import *
+
+DEFAULT_FROM_EMAIL = 'difio@example.com'
+
+##### Default protocol and domain name settings
+FQDN="http://example.com"
+
+#### JSON storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+DEFAULT_S3_PATH = "media"
+
+# django storages settings
+AWS_S3_ACCESS_KEY_ID='xxxxxxxxxxxxxxxxxxxx'
+AWS_S3_SECRET_ACCESS_KEY='YYYYYYYYYYYYYYYY'
+AWS_STORAGE_BUCKET_NAME='www.example.com'
+AWS_S3_CALLING_FORMAT=ProtocolIndependentOrdinaryCallingFormat()
+AWS_QUERYSTRING_AUTH=False
+
+
+##### STATIC FILES SETTINGS
+STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'
+
+STATIC_DOMAIN = '//example.cloudfront.net'
+
+STATIC_S3_PATH = 'static/v01/'
+STATIC_NOVER_PATH = 'static/nv/'
+STATIC_URL       = '%s/%s' % (STATIC_DOMAIN, STATIC_S3_PATH)
+STATIC_NOVER_URL = '%s/%s' % (STATIC_DOMAIN, STATIC_NOVER_PATH)
+
+STATICFILES_DIRS = ()
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder', # for nv/ DEBUG only Todo: fix it
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.app_directories.Loader',
+)
+
+INSTALLED_APPS = (
+# NB: ordered first b/c they override admin templates
+    'difio',
+    'djcelery',
+    'djkombu',
+    'storages',
+    's3_folder_storage',
+)
+
+
+EMAIL_BACKEND = 'django_ses.SESBackend' # TODO:
+
+
+# user profiles settings
+AUTH_PROFILE_MODULE = "difio.MockProfile"
+
+# GitHub auth tokens
+GITHUB_APP_ID                = '00000000000000000000'
+GITHUB_API_SECRET            = '77777777777777777777'
+
+##### RubyGems.org API key
+RUBYGEMS_API_KEY = '00000000000000000000000000000000'
+
+
+##### CELERY MESSAGING SETTINGS
+CELERY_DEFAULT_QUEUE = 'difio'
+CELERY_QUEUES = {
+    CELERY_DEFAULT_QUEUE: {
+        'exchange': CELERY_DEFAULT_QUEUE,
+        'binding_key': CELERY_DEFAULT_QUEUE,
+    }
+}
+
+BROKER_USE_SSL = True
+BROKER_TRANSPORT_OPTIONS = {
+    'region': 'us-east-1',
+}
+BROKER_URL = "sqs://XXXXXXXXXXXXXXXXXXXX:YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY@"
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_IGNORE_RESULT = True
+CELERY_DISABLE_RATE_LIMITS = True
+```
