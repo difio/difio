@@ -9,7 +9,7 @@ It provides multiple change analytics so you can make an informed decision when
 or what to upgrade. Difio seeks to minimize the risk of upgrading upstream packages
 inside your applications.
 
-Difio is a Django based application. For development quearies please head to the
+Difio is a Django based application. For development queries please head to the
 [difio-devel](https://groups.google.com/forum/#!forum/difio-devel) group.
 
 
@@ -38,3 +38,9 @@ See the LICENSE file located in this directory.
 
 How to install
 ---------------
+
+    $ django-admin.py startproject mysite
+    $ cd mysite/
+    $ git clone https://github.com/difio/difio
+    $ pip install -r difio/requirements.txt
+
