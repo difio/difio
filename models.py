@@ -32,39 +32,41 @@ import bugs
 import utils
 from django.db import models
 from datetime import datetime
-from settings import STATIC_URL
+from django.conf import settings
 from utils import URL_ADVISORIES
 from django.db.models import Manager
 from django.contrib.auth.models import User
 from managers import SkinnyManager
 
 try:
-    from settings import FQDN
+    FQDN = settings.FQDN
 except:
     FQDN=""
 
+# legacy table names
+
 try:
-    from settings import APPLICATION_DB_TABLE
+    APPLICATION_DB_TABLE = settings.APPLICATION_DB_TABLE
 except:
     APPLICATION_DB_TABLE = False
 
 try:
-    from settings import PACKAGE_DB_TABLE
+    PACKAGE_DB_TABLE = settings.PACKAGE_DB_TABLE
 except:
     PACKAGE_DB_TABLE = False
 
 try:
-    from settings import PACKAGE_VERSION_DB_TABLE
+    PACKAGE_VERSION_DB_TABLE = settings.PACKAGE_VERSION_DB_TABLE
 except:
     PACKAGE_VERSION_DB_TABLE = False
 
 try:
-    from settings import INSTALLED_PACKAGE_DB_TABLE
+    INSTALLED_PACKAGE_DB_TABLE = settings.INSTALLED_PACKAGE_DB_TABLE
 except:
     INSTALLED_PACKAGE_DB_TABLE = False
 
 try:
-    from settings import ADVISORY_DB_TABLE
+    ADVISORY_DB_TABLE = settings.ADVISORY_DB_TABLE
 except:
     ADVISORY_DB_TABLE = False
 
@@ -159,7 +161,7 @@ class Application(models.Model):
         elif type_lower.find('php') > -1:
             img_id = "php"
 
-        return "%si/p/t/48/%s.png" % (STATIC_URL, img_id)
+        return "%si/p/t/48/%s.png" % (settings.STATIC_URL, img_id)
 
 # NB: values are hard-coded into the client code
 # Do not change, Update only
@@ -549,7 +551,7 @@ class Package(models.Model):
             Return the URL with icon for this package type
             Size: 48x48 px
         """
-        return "%si/p/t/48/%d.png" % (STATIC_URL, self.type)
+        return "%si/p/t/48/%d.png" % (settings.STATIC_URL, self.type)
 
 
 PACKAGE_VERSION_STATUSES = (
@@ -693,7 +695,7 @@ class Advisory(models.Model):
             Return the HTML img tag with icon representing Severity
         """
         sev_display = self.get_severity_display()
-        return "<img src='%si/s/%s.png' alt='%s' title='%s' />" % (STATIC_URL, self.severity, sev_display, sev_display)
+        return "<img src='%si/s/%s.png' alt='%s' title='%s' />" % (settings.STATIC_URL, self.severity, sev_display, sev_display)
 
 
 

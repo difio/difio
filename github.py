@@ -26,7 +26,9 @@ from datetime import datetime, timedelta
 from utils import which_tag, fetch_page
 
 try:
-    from settings import GITHUB_APP_ID, GITHUB_API_SECRET
+    from django.conf import settings
+    GITHUB_APP_ID = settings.GITHUB_APP_ID
+    GITHUB_API_SECRET = settings.GITHUB_API_SECRET
     settings_imported = True
 except:
     # used for local testing
