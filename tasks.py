@@ -38,7 +38,6 @@ import xmlrpclib
 import subprocess
 import mavencentral
 from models import *
-from settings import *
 from time import sleep
 from decorators import *
 import distutils.dir_util
@@ -47,6 +46,7 @@ from tar import bz2compress
 from tempfile import mkdtemp
 from celery.task import task
 from traceback import format_tb
+from django.conf import settings
 from django.core.cache import cache
 from django.core import cache as cache_module
 from django.db import reset_queries
@@ -1830,7 +1830,7 @@ def notify_app_owner_about_update(user_id, start_date, end_date, frequency):
     try:
         send_templated_mail(
             template_name='update_digest',
-            from_email="Difio <%s>" % DEFAULT_FROM_EMAIL,
+            from_email="Difio <%s>" % settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             context={
                 'email_subject' : email_data[frequency]['subject'],
