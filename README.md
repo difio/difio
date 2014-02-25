@@ -9,6 +9,9 @@ It provides multiple change analytics so you can make an informed decision when
 or what to upgrade. Difio seeks to minimize the risk of upgrading upstream packages
 inside your applications.
 
+Difio is a Django based application. For development quearies please head to the
+[difio-devel](https://groups.google.com/forum/#!forum/difio-devel) group.
+
 
 Supported programming languages and package sources
 ---------------------------------------------------
@@ -27,7 +30,7 @@ Copyright
 ---------
 
 Difio was initially developed by [Alexander Todorov](https://github.com/atodorov)
-and [Svetlozar Argirov](https://github.com/zaro) for <www.dif.io>.
+and [Svetlozar Argirov](https://github.com/zaro) for [www.dif.io](http://www.dif.io).
 
 Difio, except where otherwise noted, is released under the
 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
