@@ -48,22 +48,26 @@ Configure `urls.py`:
 
     url(r'^difio/', include('difio.urls')),
 
-Configure `settings.py`:
+Configure `settings.py`. See the comments inline.
 
 ``` python
+
+# loads Celery 
 import djcelery
 djcelery.setup_loader()
 
+# this defines AWS CALLING FORMAT
 from boto.s3.connection import *
 
-DEFAULT_FROM_EMAIL = 'difio@example.com'
+DEFAULT_FROM_EMAIL = 'difio@example.com' # used when sending notifications
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # configure if not using the default one
 
 ##### Default protocol and domain name settings
 FQDN="http://example.com"
 
 #### JSON storage
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-DEFAULT_S3_PATH = "media"
+DEFAULT_S3_PATH = "media" # unused
 
 # django storages settings
 AWS_S3_ACCESS_KEY_ID='xxxxxxxxxxxxxxxxxxxx'
@@ -76,7 +80,7 @@ AWS_QUERYSTRING_AUTH=False
 ##### STATIC FILES SETTINGS
 STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'
 
-STATIC_DOMAIN = '//example.cloudfront.net'
+STATIC_DOMAIN = '//example.cloudfront.net'  # CDN origins need to be configured manually with the CDN provider
 
 STATIC_S3_PATH = 'static/v01/'
 STATIC_NOVER_PATH = 'static/nv/'
@@ -107,7 +111,7 @@ INSTALLED_APPS = (
 )
 
 
-EMAIL_BACKEND = 'django_ses.SESBackend' # TODO:
+
 
 
 # user profiles settings
@@ -139,4 +143,21 @@ BROKER_URL = "sqs://XXXXXXXXXXXXXXXXXXXX:YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_IGNORE_RESULT = True
 CELERY_DISABLE_RATE_LIMITS = True
+
+##### CACHE SETTINGS
+CACHES = {
+# Cache used for temporary objects like email hashes
+# used for address verification
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', # TODO: FIX ME 
+        'TIMEOUT' : 60*60*24*30, # 1 month timeout
+    },
+# Cache used to pass larger objects to tasks to avoid
+# hitting SQS message size limit. Uses different sub-path
+    'taskq': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', # TODO: FIX ME
+        'TIMEOUT' : 60*60*24, # 1 day timeout
+    },
+}
+
 ```
