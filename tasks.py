@@ -59,7 +59,6 @@ from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from social_auth.models import UserSocialAuth
 from django.core.files.base import ContentFile
 from templated_email import send_templated_mail
 from django.core.handlers.wsgi import WSGIRequest
