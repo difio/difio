@@ -29,14 +29,12 @@ import difio.tasks
 import pkg_parsers
 from forms import *
 from models import *
+from django.conf import settings
 from django.core.cache import cache
 from django.core import cache as cache_module
 from django.shortcuts import render
 from django.contrib import messages
 from django.utils.html import escape
-from settings import RUBYGEMS_API_KEY
-from settings import STATIC_NOVER_URL
-from settings import DEFAULT_FROM_EMAIL
 from datetime import datetime, timedelta
 from django.db.models import Count, Q, Sum
 from ratelimit.decorators import ratelimit
@@ -52,7 +50,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 def analytics(request):
-    return render(request, 'analytics.html', {'STATIC_NOVER_URL' : STATIC_NOVER_URL})
+    return render(request, 'analytics.html', {'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL})
 
 def index(request):
     """
@@ -66,14 +64,14 @@ def index(request):
     query = Advisory.objects.filter(status=STATUS_LIVE).only('id', 'type', 'severity').order_by('-new__released_on')[:FRONT_PAGE_PAGINATOR]
     context['updates'] = query
 
-    return render(request, 'index.html', {'context' : context, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+    return render(request, 'index.html', {'context' : context, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
 def search_results(request):
     """
         Page to show search results from Google CSE.
     """
-    return render(request, 'search.html', { 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+    return render(request, 'search.html', { 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
 def advisory(request, old, new, id):
@@ -87,7 +85,7 @@ def advisory(request, old, new, id):
         messages.error(request, "Advisory not found!")
         return HttpResponseRedirect(reverse('dashboard'))
 
-    return render(request, 'apps/advisory.html', {'advisory' : adv, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+    return render(request, 'apps/advisory.html', {'advisory' : adv, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
 def ajax_reminder_social_provider(request):
@@ -114,7 +112,7 @@ def ajax_reminder_social_provider(request):
     if len(providers) > 0:
         send_templated_mail(
             template_name='social_provider_reminder',
-            from_email="Difio <%s>" % DEFAULT_FROM_EMAIL,
+            from_email="Difio <%s>" % settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             context={'providers' : providers},
         )
@@ -370,7 +368,7 @@ def myapps_new(request):
                 'dashboard/apps2.html',
                 {
                     'apps_data' : template_data,
-                    'STATIC_NOVER_URL' : STATIC_NOVER_URL,
+                    'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL,
                 }
             )
 
@@ -396,7 +394,7 @@ def ajax_invite_friends(request):
 
                             send_templated_mail(
                                 template_name='invite_friends',
-                                from_email="Difio <%s>" % DEFAULT_FROM_EMAIL,
+                                from_email="Difio <%s>" % settings.DEFAULT_FROM_EMAIL,
                                 recipient_list=[email],
                                 context={
                                     'username':request.user.username,
@@ -764,7 +762,7 @@ def appdetails(request, id):
         return HttpResponseRedirect(reverse('dashboard'))
 
     context['show_all'] = show_all
-    context['STATIC_NOVER_URL'] = STATIC_NOVER_URL
+    context['STATIC_NOVER_URL'] = settings.STATIC_NOVER_URL
 
     return render(request, 'apps/details.html', context)
 
@@ -776,7 +774,7 @@ def mock_profile_details(request):
     """
 
     context = {
-        'STATIC_NOVER_URL' : STATIC_NOVER_URL,
+        'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL,
         'profile' : request.user.get_profile(),
     }
 
@@ -796,7 +794,7 @@ def app_history(request, id):
         return HttpResponseRedirect(reverse('dashboard'))
 
     query = ApplicationHistory.objects.filter(application=id).order_by('-when_added')
-    return render(request, 'apps/history.html', {'context' : query, 'app' : app, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+    return render(request, 'apps/history.html', {'context' : query, 'app' : app, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
 def _application_manual_register(data, request, FormClass, form_field, template, parse_func, search_into_files=False):  # FALSE NEGATIVE
@@ -819,10 +817,10 @@ def _application_manual_register(data, request, FormClass, form_field, template,
 
     if not request.POST:
         form = FormClass()
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
     elif search_into_files and (not request.FILES):
         form = FormClass()
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
     else:
         if search_into_files:
             form = FormClass(request.POST, request.FILES)
@@ -830,7 +828,7 @@ def _application_manual_register(data, request, FormClass, form_field, template,
             form = FormClass(request.POST)
 
     if not form.is_valid():
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
     if search_into_files:
         # b/c all functions take string and split by new line
@@ -840,13 +838,13 @@ def _application_manual_register(data, request, FormClass, form_field, template,
 
     if not package_text:
         messages.error(request, "Empty package list!")
-        return render(request, template, {'form': form, 'uuid' : UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid' : UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
     result = parse_func(request, package_text)
 
     if result['errors'] > 0:
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
     # set common values
     data['user_id']    = request.user.id
@@ -868,7 +866,7 @@ def _application_manual_register(data, request, FormClass, form_field, template,
         return HttpResponseRedirect(reverse('dashboard'))
     else:
         messages.error(request, result['message'])
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
 
 
 
@@ -1131,7 +1129,7 @@ def hook_rubygems(request):
     data = request.read()
     data = json.loads(data)
 
-    authorization = hashlib.sha256(data['name'] + data['version'] + RUBYGEMS_API_KEY).hexdigest()
+    authorization = hashlib.sha256(data['name'] + data['version'] + settings.RUBYGEMS_API_KEY).hexdigest()
     if request.META['HTTP_AUTHORIZATION'] != authorization:
         return HttpResponse("Unauthorized", mimetype='text/plain', status=401)
     else:
