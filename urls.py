@@ -20,7 +20,6 @@
 from django.contrib import admin
 admin.autodiscover()
 
-from settings import STATIC_NOVER_URL
 from django.contrib.auth import views as auth_views
 from django.conf.urls import patterns, include, url
 
