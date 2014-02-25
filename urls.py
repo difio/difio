@@ -45,7 +45,6 @@ urlpatterns = patterns('',
     url(r'^ajax/approve/application/$', 'difio.views.ajax_app_approve', name='ajax_approve_app'),
     url(r'^ajax/invite_friends/$', 'difio.views.ajax_invite_friends', name='ajax_invite_friends'),
     url(r'^ajax/search/packages/(?P<uuid>.*)/$', 'difio.views.ajax_search_packages', name='ajax_search_packages'),
-    url(r'^ajax/reminder/social_provider/$', 'difio.views.ajax_reminder_social_provider', name='ajax_reminder_social_provider'),
 
     # registration endpoints
     url(r'^application/register/$', 'difio.views.application_register'),

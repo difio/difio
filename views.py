@@ -42,7 +42,6 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import *
 from django.core.urlresolvers import reverse
-from social_auth.models import UserSocialAuth
 from templated_email import send_templated_mail
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
@@ -86,40 +85,6 @@ def advisory(request, old, new, id):
         return HttpResponseRedirect(reverse('dashboard'))
 
     return render(request, 'apps/advisory.html', {'advisory' : adv, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
-
-
-def ajax_reminder_social_provider(request):
-    """
-        Remind the user which social provider they used to login.
-    """
-    if not request.POST:
-        return HttpResponse("Not a POST", mimetype='text/plain', status=403)
-
-    email = request.POST.get('email', "")
-    email = email.strip()
-    if not email or (email.find("@") == -1):
-        return HttpResponse("Invalid address!", mimetype='text/plain', status=400)
-
-    try:
-        user = User.objects.filter(email=email, is_active=True).only('pk')[0]
-    except:
-        return HttpResponse("No user with address '%s' found!" % email, mimetype='text/plain', status=400)
-
-    providers = []
-    for sa in UserSocialAuth.objects.filter(user=user.pk).only('provider'):
-        providers.append(sa.provider.title())
-
-    if len(providers) > 0:
-        send_templated_mail(
-            template_name='social_provider_reminder',
-            from_email="Difio <%s>" % settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            context={'providers' : providers},
-        )
-        return HttpResponse("Reminder sent to '%s'" % email, mimetype='text/plain', status=200)
-    else:
-        return HttpResponse("User found but no social providers found!", mimetype='text/plain', status=400)
-
 
 
 @login_required
