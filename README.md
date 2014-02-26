@@ -97,7 +97,7 @@ MEDIA_ROOT = "/tmp/example.com/files"
 
 
 ##### STATIC FILES SETTINGS
-STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_ROOT = '/tmp/example.com/static'
 STATIC_URL       = '/static/'
 STATIC_NOVER_URL = '/static/nv/'
