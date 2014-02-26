@@ -56,73 +56,92 @@ Configure `settings.py`. See the comments inline.
 import djcelery
 djcelery.setup_loader()
 
-# this defines AWS CALLING FORMAT
-from boto.s3.connection import *
 
-DEFAULT_FROM_EMAIL = 'difio@example.com' # used when sending notifications
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # configure if not using the default one
+# configure the database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+
+
+# First define apps part of difio/ then the rest of your site
+INSTALLED_APPS = (
+# NB: ordered first b/c they override admin templates
+    'difio',
+    'djcelery',
+# other apps go below
+)
+
+
+
+# email configuration for sending notifications
+DEFAULT_FROM_EMAIL = 'difio@example.com'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
 
 ##### Default protocol and domain name settings
-FQDN="http://example.com"
+FQDN="http://example.com" # optional
+
+
 
 #### JSON storage
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-DEFAULT_S3_PATH = "media" # unused
+# this setting is used to write the JSON files containing
+# analytics data, which are then loaded by the web page using AJAX
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+MEDIA_ROOT = "/tmp/example.com/files"
 
-# django storages settings
-AWS_S3_ACCESS_KEY_ID='xxxxxxxxxxxxxxxxxxxx'
-AWS_S3_SECRET_ACCESS_KEY='YYYYYYYYYYYYYYYY'
-AWS_STORAGE_BUCKET_NAME='www.example.com'
-AWS_S3_CALLING_FORMAT=ProtocolIndependentOrdinaryCallingFormat()
-AWS_QUERYSTRING_AUTH=False
 
 
 ##### STATIC FILES SETTINGS
-STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'
+STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STATIC_ROOT = '/tmp/example.com/static'
+STATIC_URL       = '/static/'
+STATIC_NOVER_URL = '/static/nv/'
 
-STATIC_DOMAIN = '//example.cloudfront.net'  # CDN origins need to be configured manually with the CDN provider
-
-STATIC_S3_PATH = 'static/v01/'
-STATIC_NOVER_PATH = 'static/nv/'
-STATIC_URL       = '%s/%s' % (STATIC_DOMAIN, STATIC_S3_PATH)
-STATIC_NOVER_URL = '%s/%s' % (STATIC_DOMAIN, STATIC_NOVER_PATH)
-
-STATICFILES_DIRS = ()
-
-# List of finder classes that know how to find static files in
-# various locations.
+# List of finder classes that know how to find static files in various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder', # for nv/ DEBUG only Todo: fix it
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
 
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-INSTALLED_APPS = (
-# NB: ordered first b/c they override admin templates
-    'difio',
-    'djcelery',
-    'djkombu',
-    'storages',
-    's3_folder_storage',
-)
 
 
-
-
-
-# user profiles settings
+##### User profiles settings - replace with your own implementation
+# with get_email_delay(), is_subscribed() and get_subscription_plan_name()
+# methods. See MockImplementation
 AUTH_PROFILE_MODULE = "difio.MockProfile"
 
-# GitHub auth tokens
-GITHUB_APP_ID                = '00000000000000000000'
-GITHUB_API_SECRET            = '77777777777777777777'
+
+
+##### GitHub auth tokens
+# used by github.py for authenticated requests
+# unauthenticated requests are severely limited.
+# See http://developer.github.com/v3/#rate-limiting
+# github.py uses OAuth2 Key/Secret authentication , see
+# http://developer.github.com/v3/#authentication
+# You will have to register an application with GitHub
+# in order to be issued these tokens
+
+# GITHUB_APP_ID                = '00000000000000000000'
+# GITHUB_API_SECRET            = '77777777777777777777'
+
+
 
 ##### RubyGems.org API key
-RUBYGEMS_API_KEY = '00000000000000000000000000000000'
+# used for importing packages via RubyGems.org web hooks
+# http://guides.rubygems.org/rubygems-org-api/#webhook_methods
+# If this is defined importing from RSS will be disabled automatically
+
+# RUBYGEMS_API_KEY = '00000000000000000000000000000000'
 
 
 ##### CELERY MESSAGING SETTINGS
@@ -135,29 +154,39 @@ CELERY_QUEUES = {
 }
 
 BROKER_USE_SSL = True
-BROKER_TRANSPORT_OPTIONS = {
-    'region': 'us-east-1',
-}
-BROKER_URL = "sqs://XXXXXXXXXXXXXXXXXXXX:YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY@"
+BROKER_URL = "amqp://"
 
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_IGNORE_RESULT = True
 CELERY_DISABLE_RATE_LIMITS = True
 
+
+
 ##### CACHE SETTINGS
+# NB: change FileBasedCache to what you use or leave unmodified otherwise
+# DO NOT use LocMemCache because **cross-process caching is NOT possible**.
+
 CACHES = {
-# Cache used for temporary objects like email hashes
-# used for address verification
+# Used for temporary objects like email hashes
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', # TODO: FIX ME 
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION' : '/tmp/example.com/cache/default',
         'TIMEOUT' : 60*60*24*30, # 1 month timeout
     },
-# Cache used to pass larger objects to tasks to avoid
-# hitting SQS message size limit. Uses different sub-path
+# Used to pass larger objects to tasks to avoid hitting message bus size limit
     'taskq': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', # TODO: FIX ME
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION' : '/tmp/example.com/cache/taskq',
         'TIMEOUT' : 60*60*24, # 1 day timeout
     },
 }
 
 ```
+
+
+$ python manage.py syncdb
+
+
+* Register RubyGems.org web hook (optional)
+
+* Configrue CRON scheduler or 
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
