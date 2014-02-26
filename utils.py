@@ -313,6 +313,7 @@ def which_tag(version, tags, name = None, reverse=False):
         ('RELEASE_%s',       'RELEASE_(.*)'),
         ('RELEASE-%s',       'RELEASE-(.*)'),
         ('%s-release',       '(.*)-release'),
+        ('CPAN_%s',          'CPAN_(.*)'),
         ('cpan-releases/%s', 'cpan-releases/(.*)'),
         ('tag/%s',           'tag/(.*)'),
         ('tag/%s-release',   'tag/(.*)-release'),
