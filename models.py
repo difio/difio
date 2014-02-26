@@ -43,6 +43,11 @@ try:
 except:
     FQDN=""
 
+try:
+    RUBYGEMS_API_KEY = settings.RUBYGEMS_API_KEY
+except:
+    RUBYGEMS_API_KEY = False
+
 # legacy table names
 
 try:
@@ -205,9 +210,10 @@ PACKAGE_CALLBACKS = {
             'get_latest' : rubygems.get_latest,
             'find_date' : rubygems.get_release_date,
             'get_download_url' : rubygems.get_download_url,
-# Since 2012-11-16, 12:00:00 Ruby gems are imported view webhook
-# this decreases the number of duplicate messges for already imported packages
-            'get_latest_packages_from_rss' : None, # rubygems.get_latest_from_rss,
+# if RUBYGEMS_API_KEY is defined disable RSS imports
+# Need to manually register the .../hook/rubygems/ path with RubyGems.org
+# See urls.py/views.py and http://guides.rubygems.org/rubygems-org-api/#webhook_methods
+            'get_latest_packages_from_rss' : None if RUBYGEMS_API_KEY else rubygems.get_latest_from_rss,
         },
     NODEJS_PKG: {
             'compare_versions' : nodejs.compare_versions,
