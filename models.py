@@ -741,14 +741,13 @@ class Bug(models.Model):
         return unicode("%s - %d: %s" % (self.url, self.number, self.title))
 
 
-class MockProfile(models.Model):
-    """
-        Any user profile class should inherit from this
-        and override any default methods.
-    """
 
-    objects = SkinnyManager()
-
+class AbstractMockProfile(models.Model):
+    """
+        Any AUTH_PROFILE_MODULE class should inherit from this
+        and override the default methods. You can also override
+        the default objects manager!
+    """
     user = models.ForeignKey(User, unique=True)
 
     def get_email_delay(self):
@@ -762,3 +761,48 @@ class MockProfile(models.Model):
 
     class Meta:
         abstract = True
+
+
+
+class MockProfileManager(models.Manager):
+    """
+        This manager creates MockProfile's on the fly without
+        touching the database. It is needed by User.get_profile()
+        b/c we can't have an abstract base class as AUTH_PROFILE_MODULE.
+    """
+
+    def using(self, *args, **kwargs):
+        """
+            It doesn't matter which database we use. Return self
+            b/c everything happens in memory.
+        """
+        return self
+
+    def get(self, *args, **kwargs):
+        """
+            User.get_profile() calls .using().get(user_id__exact=X)
+            so we instrument it here to return a MockProfile() with
+            user_id=X parameter. Anything else will probably break!!!
+        """
+        params = {}
+        for p in kwargs.keys():
+            params[p.split("__")[0]] = kwargs[p]
+        return MockProfile(params)
+
+
+
+class MockProfile(AbstractMockProfile):
+    """
+        In-memory (fake) profile class used by default for
+        the AUTH_PROFILE_MODULE setting.
+
+        NB: this class is for demonstration purposes only!
+
+        Use your own implementation when deploying Difio!
+    """
+
+    objects = MockProfileManager()
+
+    class Meta:
+        managed = False
+
