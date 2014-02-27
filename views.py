@@ -43,7 +43,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import *
 from django.core.urlresolvers import reverse
 from templated_email import send_templated_mail
-from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
