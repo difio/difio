@@ -3,7 +3,7 @@
 
 {% block head %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/clearqs.js"></script>
-    <script type="text/javascript" src="{{ STATIC_NOVER_URL }}momentjs-2.0.0.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/momentjs-2.0.0.min.js"></script>
     {% include "apps/dojo.html" with dialogs=0 highlight=1 %}
 {% endblock %}
 {% block title %}{{ advisory.get_title }}{% endblock %}
