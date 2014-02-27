@@ -117,7 +117,7 @@ TEMPLATE_LOADERS = (
 
 ##### User profiles settings - replace with your own implementation
 # with get_email_delay(), is_subscribed() and get_subscription_plan_name()
-# methods. See MockImplementation
+# methods. See the actual implementation for more details.
 AUTH_PROFILE_MODULE = "difio.MockProfile"
 
 
