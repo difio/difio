@@ -748,6 +748,9 @@ class AbstractMockProfile(models.Model):
         and override the default methods. You can also override
         the default objects manager!
     """
+
+    objects = SkinnyManager()
+
     user = models.ForeignKey(User, unique=True)
 
     def get_email_delay(self):
