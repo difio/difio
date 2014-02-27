@@ -1,6 +1,5 @@
 {% extends "admin/change_form.html" %}
 {% load i18n %}
-{% load static_nover_url from static_nover_url %}
 
 {% block branding %}{% endblock %}
 {% block breadcrumbs %}{% endblock %}
@@ -10,8 +9,7 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" media="screen" href="{{ STATIC_URL }}css/style.css" />
     <link type="text/css" rel="stylesheet" media="screen" href="{{ STATIC_URL }}css/admin.css" />
-    {% static_nover_url as my_static_nover_url %}
-    {% include "apps/dojo.html" with dialogs=0 highlight=1 STATIC_NOVER_URL=my_static_nover_url %}
+    {% include "apps/dojo.html" with dialogs=0 highlight=1 %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/dojo/bugs/admin.js"></script>
 {% endblock %}
 

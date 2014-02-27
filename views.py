@@ -48,7 +48,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 def analytics(request):
-    return render(request, 'analytics.html', {'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL})
+    return render(request, 'analytics.html')
 
 def index(request):
     """
@@ -62,14 +62,14 @@ def index(request):
     query = Advisory.objects.filter(status=STATUS_LIVE).only('id', 'type', 'severity').order_by('-new__released_on')[:FRONT_PAGE_PAGINATOR]
     context['updates'] = query
 
-    return render(request, 'index.html', {'context' : context, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+    return render(request, 'index.html', {'context' : context })
 
 
 def search_results(request):
     """
         Page to show search results from Google CSE.
     """
-    return render(request, 'search.html', { 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+    return render(request, 'search.html')
 
 
 def advisory(request, old, new, id):
@@ -83,7 +83,7 @@ def advisory(request, old, new, id):
         messages.error(request, "Advisory not found!")
         return HttpResponseRedirect(reverse('dashboard'))
 
-    return render(request, 'apps/advisory.html', {'advisory' : adv, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+    return render(request, 'apps/advisory.html', {'advisory' : adv })
 
 
 @login_required
@@ -332,7 +332,6 @@ def myapps_new(request):
                 'dashboard/apps2.html',
                 {
                     'apps_data' : template_data,
-                    'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL,
                 }
             )
 
@@ -726,7 +725,6 @@ def appdetails(request, id):
         return HttpResponseRedirect(reverse('dashboard'))
 
     context['show_all'] = show_all
-    context['STATIC_NOVER_URL'] = settings.STATIC_NOVER_URL
 
     return render(request, 'apps/details.html', context)
 
@@ -738,7 +736,6 @@ def mock_profile_details(request):
     """
 
     context = {
-        'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL,
         'profile' : request.user.get_profile(),
     }
 
@@ -758,7 +755,7 @@ def app_history(request, id):
         return HttpResponseRedirect(reverse('dashboard'))
 
     query = ApplicationHistory.objects.filter(application=id).order_by('-when_added')
-    return render(request, 'apps/history.html', {'context' : query, 'app' : app, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+    return render(request, 'apps/history.html', {'context' : query, 'app' : app })
 
 
 def _application_manual_register(data, request, FormClass, form_field, template, parse_func, search_into_files=False):  # FALSE NEGATIVE
@@ -781,10 +778,10 @@ def _application_manual_register(data, request, FormClass, form_field, template,
 
     if not request.POST:
         form = FormClass()
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID })
     elif search_into_files and (not request.FILES):
         form = FormClass()
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID })
     else:
         if search_into_files:
             form = FormClass(request.POST, request.FILES)
@@ -792,7 +789,7 @@ def _application_manual_register(data, request, FormClass, form_field, template,
             form = FormClass(request.POST)
 
     if not form.is_valid():
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID })
 
     if search_into_files:
         # b/c all functions take string and split by new line
@@ -802,13 +799,13 @@ def _application_manual_register(data, request, FormClass, form_field, template,
 
     if not package_text:
         messages.error(request, "Empty package list!")
-        return render(request, template, {'form': form, 'uuid' : UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid' : UUID })
 
 
     result = parse_func(request, package_text)
 
     if result['errors'] > 0:
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID })
 
     # set common values
     data['user_id']    = request.user.id
@@ -830,7 +827,7 @@ def _application_manual_register(data, request, FormClass, form_field, template,
         return HttpResponseRedirect(reverse('dashboard'))
     else:
         messages.error(request, result['message'])
-        return render(request, template, {'form': form, 'uuid': UUID, 'STATIC_NOVER_URL' : settings.STATIC_NOVER_URL })
+        return render(request, template, {'form': form, 'uuid': UUID })
 
 
 

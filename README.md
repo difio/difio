@@ -100,7 +100,6 @@ MEDIA_ROOT = "/tmp/example.com/files"
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_ROOT = '/tmp/example.com/static'
 STATIC_URL       = '/static/'
-STATIC_NOVER_URL = '/static/nv/'
 
 # List of finder classes that know how to find static files in various locations.
 STATICFILES_FINDERS = (

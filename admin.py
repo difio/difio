@@ -584,8 +584,6 @@ class AdvisoryAdmin(ButtonableModelAdmin):
 
     def details_html(self, obj):
         try:
-            from django.conf import settings
-
             env = {
                 'REQUEST_METHOD' : 'GET',
                 'wsgi.input' : None,
@@ -598,7 +596,6 @@ class AdvisoryAdmin(ButtonableModelAdmin):
                                 "advisory" : obj,
                                 "bugs" : bugstext,
                                 "is_admin" : 1,
-                                "STATIC_NOVER_URL" : settings.STATIC_NOVER_URL,
                             }
                         )
             text = text.content
