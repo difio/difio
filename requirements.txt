@@ -10,3 +10,4 @@ django-ratelimit
 django-templated-email
 mercurial
 python-magic
+urlgrabber
