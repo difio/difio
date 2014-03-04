@@ -157,7 +157,11 @@ BROKER_URL = "amqp://"
 
 CELERY_IGNORE_RESULT = True
 CELERY_DISABLE_RATE_LIMITS = True
+CELERY_ACCEPT_CONTENT = ['json']
 
+# ONLY FOR LOCAL DEVELOPMENT UNTILL THERE'S A UNIX SOCKET BROKER
+# http://docs.celeryproject.org/en/latest/configuration.html#celery-always-eager
+# CELERY_ALWAYS_EAGER=True
 
 
 ##### CACHE SETTINGS
