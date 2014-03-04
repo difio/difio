@@ -14,16 +14,6 @@
 
 <div class="stream_container">
     {% block stream_content %}
-    <div id="search">
-        <form action="{% fqdn_url 'ajax_search_packages' uuid %}" action="post" id="searchForm">
-            {% csrf_token %}
-            <input type="text" name="search" style="display:inline;margin-right:5px;"/>
-            <input type="submit" value="Search" class="button dark_blue small" />
-        </form>
-    </div>
-    <div id="stream"></div>
-    <div id="loading"><img src="{{ STATIC_URL }}i/loading.gif" alt="loading ..." /></div>
-    <div id="more" class="button light_blue">MORE</div>
     {% endblock %}
 </div>
 
