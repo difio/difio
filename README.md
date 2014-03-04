@@ -143,6 +143,7 @@ AUTH_PROFILE_MODULE = "difio.MockProfile"
 # RUBYGEMS_API_KEY = '00000000000000000000000000000000'
 
 
+
 ##### CELERY MESSAGING SETTINGS
 CELERY_DEFAULT_QUEUE = 'difio'
 CELERY_QUEUES = {
@@ -157,11 +158,16 @@ BROKER_URL = "amqp://"
 
 CELERY_IGNORE_RESULT = True
 CELERY_DISABLE_RATE_LIMITS = True
-CELERY_ACCEPT_CONTENT = ['json']
+# using pickle b/c we pass date-time and callback parameters
+# make sure to secure access to your message broker
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_TASK_SERIALIZER = 'pickle'
 
 # ONLY FOR LOCAL DEVELOPMENT UNTILL THERE'S A UNIX SOCKET BROKER
 # http://docs.celeryproject.org/en/latest/configuration.html#celery-always-eager
-# CELERY_ALWAYS_EAGER=True
+# CELERY_ALWAYS_EAGER = True
+# CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+
 
 
 ##### CACHE SETTINGS
