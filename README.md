@@ -188,6 +188,7 @@ CACHES = {
 
 $ python manage.py syncdb
 
+* Create user (assign permissions) which will be the content editor
 
 * Register RubyGems.org web hook (optional)
 
