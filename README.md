@@ -200,3 +200,15 @@ $ python manage.py syncdb
 
 * Configrue CRON scheduler or 
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+
+Warnings
+--------
+
+In case you see problems with pycurl and SSL support check these resources:
+* http://stackoverflow.com/questions/7391638/pycurl-installed-but-not-found
+* https://bugzilla.redhat.com/show_bug.cgi?id=1073648
+* https://github.com/pycurl/pycurl/pull/147
+
+Building the sources locally (with --libs instead of --static-libs) and installing
+may be used in some cases!
