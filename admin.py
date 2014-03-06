@@ -34,7 +34,6 @@ from django.core.files.base import ContentFile
 from django.contrib.admin import SimpleListFilter
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.models import AnonymousUser
-from django.core.files.storage import default_storage
 from github import _get_user_repo as github_get_user_repo
 
 
