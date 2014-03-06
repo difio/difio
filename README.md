@@ -91,7 +91,7 @@ FQDN="http://example.com" # optional
 #### JSON storage
 # this setting is used to write the JSON files containing
 # analytics data, which are then loaded by the web page using AJAX
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'difio.filestorage.OverwriteFileSystemStorage'
 MEDIA_ROOT = "/tmp/example.com/files"
 
 
