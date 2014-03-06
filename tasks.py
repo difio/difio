@@ -1154,7 +1154,8 @@ def _create_file(filename, contents):
     """
         Helper function.
     """
-    # save to S3
+    if not filename.startswith(default_storage.location):
+        filename = os.path.join(default_storage.location, filename.lstrip("/"))
     default_storage.save(filename, ContentFile(contents))
 
 @task
