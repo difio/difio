@@ -564,8 +564,8 @@ def cron_generate_advisory_files():
 def _compress_data_if_needed(data, path, field_name):
     if len(data) > utils.MYSQL_MAX_PACKET_SIZE:
         filename = '%s%s.txt.bz2' % (path, field_name)
-        default_storage.save(filename, ContentFile(bz2compress(data)))
-#NB: this will raise exception if default_storage is not on S3 (missing the url() method)
+        _create_file(filename, bz2compress(data))
+#NB: this will raise exception if default_storage is missing the url() method
         url = default_storage.url(filename)
 
         # in case we're using S3 with protocol relative URLs
