@@ -93,7 +93,13 @@ FQDN="http://example.com" # optional
 # analytics data, which are then loaded by the web page using AJAX
 DEFAULT_FILE_STORAGE = 'difio.filestorage.OverwriteFileSystemStorage'
 MEDIA_ROOT = "/tmp/example.com/files"    # where to store these files
+# Difio needs CORS enabled, for Apache add to your config:
+#    Header set Access-Control-Allow-Origin      "*"
+#    Header set Access-Control-Allow-Headers     "content-type, x-requested-with"
+#    Header set Access-Control-Allow-Methods     "GET"
+# See http://enable-cors.org/server_apache.html
 MEDIA_URL = "http://example.com/files/"  # where to serve them from
+
 
 
 ##### STATIC FILES SETTINGS
