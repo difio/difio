@@ -17,6 +17,7 @@
 ################################################################################
 
 import os
+import errno
 from django.conf import settings
 from django.core.files import locks
 from django.core.files.storage import FileSystemStorage
