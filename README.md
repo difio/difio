@@ -39,6 +39,18 @@ See the LICENSE file located in this directory.
 How to install
 ---------------
 
+Difio depends on several external components which need to be installed and
+pre-configured on the server before installing difio/.
+
+* Django - new or existing project;
+* ClamAV - for anti virus scanning;
+* Web server for JSON content (Apache, Nginx, etc);
+* Database;
+* Messaging layer (RabbitMQ, Amazon SQS, etc);
+* Periodic task scheduler (cron, celerybeat, etc);
+
+* First install the web application:
+
     $ django-admin.py startproject mysite
     $ cd mysite/
     $ git clone https://github.com/difio/difio
@@ -197,16 +209,31 @@ CACHES = {
 
 ```
 
+* Initialize the database schema:
 
-$ python manage.py syncdb
+        $ python manage.py syncdb
 
-* Create user (assign permissions) which will be the content editor
+* Optionally obtain API keys from RubyGems.org and register a web hook to import
+new gems:
 
-* Register RubyGems.org web hook (optional)
+        $ curl -H 'Authorization:00000000000000000000' \
+               -F 'gem_name=*' -F 'url=http://example.com/difio/hook/rubygems/' \
+               https://rubygems.org/api/v1/web_hooks
 
-* Configrue CRON scheduler or 
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
+* Configrue a periodic task scheduler to execute some of the maintenance tasks
+at regular intervals.
+
+
+TODO: add a script for CRON and list which tasks need to be configured.
+
+
+* Most of Difio operations are automated but analytics content needs to be
+verified by person before it is published. This is to eliminate possible errors
+and account for cases which were not automated. See *Content Administration Guide*
+for more details;
+
+* TODO: Create worker nodes
 
 Warnings
 --------
