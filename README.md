@@ -92,14 +92,14 @@ FQDN="http://example.com" # optional
 # this setting is used to write the JSON files containing
 # analytics data, which are then loaded by the web page using AJAX
 DEFAULT_FILE_STORAGE = 'difio.filestorage.OverwriteFileSystemStorage'
-MEDIA_ROOT = "/tmp/example.com/files"
-
+MEDIA_ROOT = "/tmp/example.com/files"    # where to store these files
+MEDIA_URL = "http://example.com/files/"  # where to serve them from
 
 
 ##### STATIC FILES SETTINGS
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_ROOT = '/tmp/example.com/static'
-STATIC_URL       = '/static/'
+STATIC_URL  = '/static/'
 
 # List of finder classes that know how to find static files in various locations.
 STATICFILES_FINDERS = (
