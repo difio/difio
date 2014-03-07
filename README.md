@@ -49,6 +49,7 @@ pre-configured on the server before installing difio/.
 * Messaging layer (RabbitMQ, Amazon SQS, etc);
 * Periodic task scheduler (cron, celerybeat, etc);
 
+
 * First install the web application:
 
         $ django-admin.py startproject mysite
