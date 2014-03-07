@@ -51,14 +51,14 @@ pre-configured on the server before installing difio/.
 
 * First install the web application:
 
-    $ django-admin.py startproject mysite
-    $ cd mysite/
-    $ git clone https://github.com/difio/difio
-    $ pip install -r difio/requirements.txt
+        $ django-admin.py startproject mysite
+        $ cd mysite/
+        $ git clone https://github.com/difio/difio
+        $ pip install -r difio/requirements.txt
 
 Configure `urls.py`:
 
-    url(r'^difio/', include('difio.urls')),
+        url(r'^difio/', include('difio.urls')),
 
 Configure `settings.py`. See the comments inline.
 
