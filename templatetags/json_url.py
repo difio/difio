@@ -32,10 +32,8 @@ def json_url(path):
     """
     A template tag that returns the URL to a file
     using the default storage backend.
-NB: In case the DEFAULT_STORAGE is not Amazon S3 this may cause
-a backtrace.
     """
-    return default_storage.url(path)
+    return default_storage.url(path.lstrip("/"))
 
 @register.simple_tag
 def json_base_url(path):
