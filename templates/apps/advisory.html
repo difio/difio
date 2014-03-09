@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load include_if_exists %}
 {% load json_url from json_url %}
 
 {% block head %}
@@ -35,23 +36,11 @@
   </tr>
 </table>
 
-<div class="sharing" style="float:left;">
-<!-- AddThis Button BEGIN -->
-    <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-        <a class="addthis_button_twitter"></a>
-        <a class="addthis_button_compact"></a>
-        <a class="addthis_counter addthis_bubble_style"></a>
-    </div>
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50fb0d604eb24fd0"></script>
-<!-- AddThis Button END -->
-</div>
+{% include_if_exists "difio_analytics_extra_header.html" %}
 
 {% include "apps/tabs.html" %}
 {% endblock %}
 
 {% block content-bottom %}
-<a name="comments">&nbsp;</a>
-<div id="disqus_thread"></div>
-<script type="text/javascript" src="{{ STATIC_URL }}js/disqus.js"></script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+{% include_if_exists "difio_comments.html" %}
 {% endblock %}
