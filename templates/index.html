@@ -37,11 +37,13 @@ After reading the change analytics you can make informed decision when or what t
     <div style="float:right;">
         <table style="float:right;top:10px">
             {% include "apps/all_advisories_table.html" with object_list=context.updates truncate=1 %}
+            {% if context.updates_count > 0 %}
             <tr>
                 <td colspan="2" style="border: none;">
                     <h4 class="russo">{{ context.updates_count|default:11902 }} more analyzed</h4>
                 </td>
             </tr>
+            {% endif %}
         </table>
 
         <div class="sharing">

@@ -57,7 +57,11 @@ def index(request):
     context = {}
     FRONT_PAGE_PAGINATOR = 7
 
-    context['updates_count'] = Advisory.objects.filter(status=STATUS_LIVE).count() - FRONT_PAGE_PAGINATOR
+    remaining_updates_count = Advisory.objects.filter(status=STATUS_LIVE).count() - FRONT_PAGE_PAGINATOR
+    if remaining_updates_count > 0:
+        context['updates_count'] = remaining_updates_count
+    else:
+        context['updates_count'] = 0
 
     query = Advisory.objects.filter(status=STATUS_LIVE).only('id', 'type', 'severity').order_by('-new__released_on')[:FRONT_PAGE_PAGINATOR]
     context['updates'] = query
