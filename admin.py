@@ -295,7 +295,7 @@ ASSIGNED TO %s""" % (obj.get_status_display(), obj.package.name,
                         obj.package.get_status_display(), obj.size,
                         obj.assigned_to
                     )
-        return text
+        return text.replace("\n", "") # https://code.djangoproject.com/ticket/19226#comment:15
     package_status.short_description = 'Package'
     package_status.allow_tags = True
 
@@ -600,6 +600,11 @@ class AdvisoryAdmin(ButtonableModelAdmin):
             text = text.content
         except:
             text = "ERROR %s" % sys.exc_info()[1]
+        # in Django 1.5 and later this is rendered as
+        # <p>{{ field.contents|linebreaksbr }}</p>
+        # which replaces newlines with <br /> tags and breaks formatting
+        # https://code.djangoproject.com/ticket/19226#comment:15
+        text = text.replace("\n", "")
         return text
     details_html.allow_tags = True
     details_html.short_description = ''
