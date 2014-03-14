@@ -262,7 +262,22 @@ The following script may be used as a cron helper:
         
         echo "import $MODULE_NAME; $TASK_NAME.delay()" | $APP_DIR/manage.py shell
 
+In case you decide to use Celerybeat see the
+[Periodic Tasks](http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html)
+document.
 
+
+* After the web application is installed Difio will start recording information
+from upstream sources as well as user input. It will compare currently listed package
+versions in the DB with the latest available and schedule analytics actions. This is
+done in long-running background tasks using Celery. These are called workers in
+Celery terms.
+
+A worker consists of the same application code, including same settings.py and
+configuration to start the worker daemon. Please see
+[Workers Guide](http://docs.celeryproject.org/en/latest/userguide/workers.html) and 
+[Running the worker as a daemon](http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html)
+for more information.
 
 
 * Most of Difio operations are automated but analytics content needs to be
