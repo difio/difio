@@ -118,26 +118,7 @@ Patches are welcome at <a href="https://groups.google.com/forum/#!forum/difio-de
 or via our <a href="https://github.com/difio/difio">GitHub repository</a>.
     </div>
 
-
-
-
-    <div class="feature-box-left">
-<h4 class="russo">Pricing</h4>
-
-<img src="{{ STATIC_URL }}i/f/pricing.png" alt="" class="framedimg"/>
-
-To access analytics for packages older than 6 months or 1 year
-you need a <a href="{% fqdn_url 'profiles_my_profile_detail' %}">subscription</a>.
-<br /><br />
-
-Free for fresh packages! Upgrading your apps frequently will keep bugs
-away and avoid charges.
-<br /><br />
-
-
-The older the packages you use, the more you have to pay!
-    </div>
-
+{% include_if_exists "difio_index_extra_features.html" %}
 
 <div class="packages">
     <h4 class="russo" style="position:relative;top:-10px;background-color:#e7f5f8;width:60%;margin:0;margin-left:auto;margin-right:auto;text-align:center">Supported Packages</h4>
