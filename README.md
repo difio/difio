@@ -257,8 +257,8 @@ The following script may be used as a cron helper:
         [ -z "$TASK_NAME" ] && TASK_NAME=$(basename $0)
         MODULE_NAME=`echo "$TASK_NAME" | rev | cut -f2- -d. | rev`
         
-        source ~/.virtenvs/$CHANGE_ME/bin/activate
-        APP_DIR="~/$CHAMGE_ME/app"
+        source ~/.virtualenvs/$CHANGE_ME/bin/activate
+        APP_DIR="~/$CHANGE_ME/app"
         
         echo "import $MODULE_NAME; $TASK_NAME.delay()" | $APP_DIR/manage.py shell
 
