@@ -272,7 +272,6 @@ from upstream sources as well as user input. It will compare currently listed pa
 versions in the DB with the latest available and schedule analytics actions. This is
 done in long-running background tasks using Celery. These are called workers in
 Celery terms.
-
 A worker consists of the same application code, including same settings.py and
 configuration to start the worker daemon. Please see
 [Workers Guide](http://docs.celeryproject.org/en/latest/userguide/workers.html) and 
