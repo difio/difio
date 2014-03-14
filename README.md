@@ -223,10 +223,46 @@ new gems:
 
 
 * Configrue a periodic task scheduler to execute some of the maintenance tasks
-at regular intervals.
+at regular intervals. Following is a list of tasks and execution frequencies
+
+        # fixed interval tasks - send email notifications
+        ./daily:        difio.tasks.cron_notify_app_owners_1
+
+        # flexible interval tasks:
+        # - depend on how often do you want to query upstream;
+        # - depend on available computing resources (less frequent execution, less resources needed)
+        difio.tasks.cron_delete_pending_apps            # deletes apps which were not approved
+        difio.tasks.cron_import_new_versions_from_rss   # imports new versions from upstream RSS feeds
+        difio.tasks.cron_find_new_versions              # alternatively query upstream for the latest version
+        difio.tasks.cron_generate_advisory_files        # generate analytics report (aka Advisory)
+        difio.tasks.cron_move_advisories_to_live        # everything in state PUSHED_LIVE becomes LIVE
 
 
-TODO: add a script for CRON and list which tasks need to be configured.
+The following script may be used as a cron helper:
+
+        #!/bin/bash
+        #
+        # Copyright (c) 2012-2013, Alexander Todorov <atodorov@nospam.dif.io>
+        #
+        # SYNOPSIS
+        #
+        # ./run_task module.tasks.task_name
+        #
+        # OR
+        #
+        # ln -s run_task module.tasks.task_name
+        #
+        
+        TASK_NAME=$1
+        [ -z "$TASK_NAME" ] && TASK_NAME=$(basename $0)
+        MODULE_NAME=`echo "$TASK_NAME" | rev | cut -f2- -d. | rev`
+        
+        source ~/.virtenvs/$CHANGE_ME/bin/activate
+        APP_DIR="~/$CHAMGE_ME/app"
+        
+        echo "import $MODULE_NAME; $TASK_NAME.delay()" | $APP_DIR/manage.py shell
+
+
 
 
 * Most of Difio operations are automated but analytics content needs to be
@@ -234,7 +270,6 @@ verified by person before it is published. This is to eliminate possible errors
 and account for cases which were not automated. See *Content Administration Guide*
 for more details;
 
-* TODO: Create worker nodes
 
 Warnings
 --------
