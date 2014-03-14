@@ -214,7 +214,7 @@ CACHES = {
 
         $ python manage.py syncdb
 
-* Optionally obtain API keys from RubyGems.org and register a web hook to import
+* Optionally obtain API keys from http://rubygems.org and register a web hook to import
 new gems:
 
         $ curl -H 'Authorization:00000000000000000000' \
@@ -225,8 +225,8 @@ new gems:
 * Configrue a periodic task scheduler to execute some of the maintenance tasks
 at regular intervals. Following is a list of tasks and execution frequencies
 
-        # fixed interval tasks - send email notifications
-        ./daily:        difio.tasks.cron_notify_app_owners_1
+        # daily tasks
+        difio.tasks.cron_notify_app_owners_1            # send daily email notifications
 
         # flexible interval tasks:
         # - depend on how often do you want to query upstream;
@@ -240,27 +240,29 @@ at regular intervals. Following is a list of tasks and execution frequencies
 
 The following script may be used as a cron helper:
 
-        #!/bin/bash
-        #
-        # Copyright (c) 2012-2013, Alexander Todorov <atodorov@nospam.dif.io>
-        #
-        # SYNOPSIS
-        #
-        # ./run_task module.tasks.task_name
-        #
-        # OR
-        #
-        # ln -s run_task module.tasks.task_name
-        #
-        
-        TASK_NAME=$1
-        [ -z "$TASK_NAME" ] && TASK_NAME=$(basename $0)
-        MODULE_NAME=`echo "$TASK_NAME" | rev | cut -f2- -d. | rev`
-        
-        source ~/.virtualenvs/$CHANGE_ME/bin/activate
-        APP_DIR="~/$CHANGE_ME/app"
-        
-        echo "import $MODULE_NAME; $TASK_NAME.delay()" | $APP_DIR/manage.py shell
+``` bash
+#!/bin/bash
+#
+# Copyright (c) 2012-2013, Alexander Todorov <atodorov@nospam.dif.io>
+#
+# SYNOPSIS
+#
+# ./run_task module.tasks.task_name
+#
+# OR
+#
+# ln -s run_task module.tasks.task_name
+#
+
+TASK_NAME=$1
+[ -z "$TASK_NAME" ] && TASK_NAME=$(basename $0)
+MODULE_NAME=`echo "$TASK_NAME" | rev | cut -f2- -d. | rev`
+
+source ~/.virtualenvs/$CHANGE_ME/bin/activate
+APP_DIR="~/$CHANGE_ME/app"
+
+echo "import $MODULE_NAME; $TASK_NAME.delay()" | $APP_DIR/manage.py shell
+```
 
 In case you decide to use Celerybeat see the
 [Periodic Tasks](http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html)
