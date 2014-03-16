@@ -280,6 +280,8 @@ configuration to start the worker daemon. Please see
 [Running the worker as a daemon](http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html)
 for more information.
 
+Maintenance
+-----------
 
 * Most of Difio operations are automated but analytics content needs to be
 verified by person before it is published. This is to eliminate possible errors
