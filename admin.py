@@ -683,7 +683,7 @@ class AdvisoryAdmin(ButtonableModelAdmin):
             messages.error(request, "Moving to PUSH_READY failed!")
 
         return HttpResponseRedirect(url)
-    push_ready.short_description = 'PUSH_READY'
+    push_ready.short_description = 'PUSH READY'
 
     def generate_diff(request, id):
         """
