@@ -283,7 +283,8 @@ for more information.
 
 * Most of Difio operations are automated but analytics content needs to be
 verified by person before it is published. This is to eliminate possible errors
-and account for cases which were not automated. See *Content Administration Guide*
+and account for cases which were not automated. See 
+*[Content Administration Guide](https://github.com/difio/difio/blob/master/CONTENT_ADMINISTRATION_GUIDE.md)*
 for more details;
 
 
