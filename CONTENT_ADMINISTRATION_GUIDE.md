@@ -42,7 +42,7 @@ required storage, messaging and bandwidth instead of importing from RSS or web h
 When newer upstream version is found analytics records are created. The
 following statuses represent various stages of records life-cycle:
 
-* *NEW* - there is a new version and analytics for it were pending processing.
+* *NEW* - there is a new version and analytics for it are pending processing.
 Possibly some of the requried data (like git checkout URL) is not made available
 yet;
 
@@ -93,4 +93,4 @@ you can do so by clicking on the NEW DIFF button.
 
 
 Once analytics records reach the PUSH_READY status they will be automatically published
-depending on the frequency configuration (e.g. cron) of `difio.tasks.cron_move_advisories_to_live`;
+depending on the frequency configuration (e.g. cron) of `difio.tasks.cron_move_advisories_to_live`.
