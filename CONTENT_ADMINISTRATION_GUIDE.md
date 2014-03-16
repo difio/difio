@@ -4,7 +4,27 @@ What is this
 This document provides guidance about day-to-day content administration of
 a running Difio installation.
 
-Once the Difio is up and running users may register their applications with
+Configuration
+--------------
+
+All three classes: *Package*, *PackageVersion* and *Advisory* have extended admin views
+which make it easier to enter the required data and verify if appropriate conditions
+are met. These views are accessible if you have the `django.contrib.admin` application
+installed.
+
+The users which will be content administrators need to have 'Can change $CLASS'
+permissions for the appropriate class and also the 'Can DROP advisories' permission.
+
+**WARNING:** if the user has the 'Can modify all fields' permission they will see the
+standard Django admin forms instead of the customized ones. Users with 
+'Can modify all fields' permission are thus considered super-users in terms of content
+administration.
+
+
+How does Difio work
+-------------------
+
+Once Difio is up and running users may register their applications with
 the service and thus start filling the database with records of used packages
 and versions. These packages need to be regularly queried about their latest
 version and if such is found Difio will generate analytics reports.
@@ -15,12 +35,16 @@ There are three ways in which Difio can query upstream sources for newer version
 * Explicitly query upstream - see `difio.tasks.cron_find_new_versions`; or
 * Use web hooks with some package repositories - see `difio.views.hook_rubygems`.
 
+**TIP:** for smaller sites querying upstream may be better in terms of
+required storage, messaging and bandwidth instead of importing from RSS or web hooks!
 
-When newer upstream version is found analytics records are created with the
-following statuses:
 
-* *NEW* - this status records the fact that there is a new version and analytics
-for it were not yet processed;
+When newer upstream version is found analytics records are created. The
+following statuses represent various stages of records life-cycle:
+
+* *NEW* - there is a new version and analytics for it were pending processing.
+Possibly some of the requried data (like git checkout URL) is not made available
+yet;
 
 * *ASSIGNED* - records with this status are under processing currently. The processing
 is triggered either manually or by `difio.tasks.cron_generate_advisory_files`;
@@ -28,7 +52,7 @@ is triggered either manually or by `difio.tasks.cron_generate_advisory_files`;
 * *MODIFIED* - records have finished automatic processing and are ready for manual
 inspection;
 
-* *PUSH_READY* - records have been manually processed (e.g. PUSH_READY button clicked)
+* *PUSH_READY* - records have been manually processed (e.g. PUSH READY button clicked)
 and are ready to be published;
 
 * *LIVE* - records have been published on the site and shouldn't be modified afterwards;
@@ -39,6 +63,9 @@ The transition from PUSH_READY to LIVE happens automatically via
 in the database to prevent the same records from being generated again (e.g. analytics
 between an older version and a newer beta version).
 
+
+How to process and publish analytics
+-------------------------------------
 
 
 MODIFIED records require manual inspection to account for not fully automated cases and bugs.
@@ -61,21 +88,9 @@ and manually inspected;
 
 * Content administrator has clicked the PUSH READY button in the admin view.
 
-
-All three classes: Package, PackageVersion and Advisory have extended admin views
-which make it easier to enter the required data and verify if appropriate conditions
-are met. These views are accessible if you have the `django.contrib.admin` application
-installed.
-
-The users which will be content administrators need to have 'Can change $OBJECT'
-permissions for the appropriate class and also the 'Can DROP advisories' permission.
-**WARNING:** if the user has the 'Can modify all fields' permission they will see the
-standard Django admin forms instead of the customized ones. Users with 
-'Can modify all fields' permission are thus considered super-users in terms of content
-administration.
-
-
 **TIP:** in case you need to regenerate the analytics data (due to error or bugs fixed)
 you can do so by clicking on the NEW DIFF button.
 
 
+Once analytics records reach the PUSH_READY status they will be automatically published
+depending on the frequency configuration (e.g. cron) of `difio.tasks.cron_move_advisories_to_live`;
