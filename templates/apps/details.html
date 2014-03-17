@@ -79,10 +79,10 @@
 {% for p in page_context.object_list %}
     <tr id="i{{ p.installed_id }}">
         <td class="dots center">{{ page_context.start_index|add:forloop.counter0 }}</td>
-        <td class="dots"><span class="{{ p.installed_color }}" title="{{ p.installed_date_text }}">{{ p.installed }}</span></td>
+        <td class="dots">{{ p.installed }}</td>
         <td class="dots">
             {% for adv in p.advisories %}
-            <a class="severity{{ adv.severity }} button micro_plus" title="{{ adv.type }} %" href="{{ adv.url }}">{{ adv.new }}</a>&nbsp;
+            <a class="{{ adv.freshness }} button micro_plus" title="Released on {{ adv.date|date:'d N Y' }}" href="{{ adv.url }}">{{ adv.new }}</a>&nbsp;
             {% endfor %}
         </td>
         <td class="dots center">

@@ -428,14 +428,14 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
     advisories = {}
     new_vers_pks = set() # PKs for new versions. Used to get version as string below
 
-    six_months_ago = datetime.now() - timedelta(days=183)
-    one_year_ago = datetime.now() - timedelta(days=365)
+    one_week_ago = datetime.now() - timedelta(days=7)
+    one_month_ago = datetime.now() - timedelta(days=30)
 
 
     query = Advisory.objects.filter(
                             old__in=installed_vers_pks,
                             status=STATUS_LIVE
-                        ).only('type', 'severity', 'new', 'old', 'old__released_on')
+                        ).only('new', 'old')
 
     for adv in query:
         if not advisories.has_key(adv.old_id):
@@ -443,23 +443,10 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
 
         adv_tmp = {
                         'pk' : adv.pk,
-                        'severity' : adv.severity,
-                        'type' : adv.type,
                         'new_pk' : adv.new_id,
                     }
 #todo: released_on dates are mapped below but we need the PK of the new packages as well
 # move it above to disable JOINs
-        # HIDE advisories if package is older and no appropriate subscription
-        # package released 6 to 12 months ago
-        if (one_year_ago <= adv.old.released_on < six_months_ago):
-            if not profile_is_subscribed:
-                adv_tmp['severity'] = '_UNSUBSCRIBED'
-
-        # package released 1+ year ago
-        if (adv.old.released_on < one_year_ago):
-             if (not profile_is_subscribed) or (profile_plan_name != 'Beaker'):
-                adv_tmp['severity'] = '_UNSUBSCRIBED'
-
         advisories[adv.old_id].append(adv_tmp)
         new_vers_pks.add(adv.new_id)
 
@@ -501,22 +488,28 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
             for adv in adv_objs:
                 new_pk = adv['new_pk']
                 adv['new'] = ver_map[new_pk]
-                adv['url'] = Advisory.get_full_path_from_string(package_name, package_version, adv['new'], adv['pk'])
-
                 date  = released_on_map[new_pk]
                 adv['date'] = date
 
-                # if package is older and no appropriate subscription
-                # link back to the profile/subscriptions page
-                # package released 6 to 12 months ago
-                if (one_year_ago <= installed_released_on < six_months_ago):
-                    if not profile_is_subscribed:
-                        adv['url'] = reverse('profiles_my_profile_detail')
+                # HIDE analytics if package is relatively new and user has no appropriate subscription
+                adv['url'] = Advisory.get_full_path_from_string(package_name, package_version, adv['new'], adv['pk'])
+                adv['freshness'] = 'green'
 
-                # package released 1+ year ago
-                if (installed_released_on < one_year_ago):
-                     if (not profile_is_subscribed) or (profile_plan_name != 'Beaker'):
+                # package released during the last week
+                if (one_week_ago <= adv['date']):
+                    if (not profile_is_subscribed) or (profile_plan_name != 'Beaker'):
+                        adv['freshness'] = 'gray'
                         adv['url'] = reverse('profiles_my_profile_detail')
+                    else:
+                        adv['freshness'] = 'red'
+
+                # package released during the last month
+                if (one_month_ago <= adv['date'] < one_week_ago):
+                    if not profile_is_subscribed:
+                        adv['freshness'] = 'gray'
+                        adv['url'] = reverse('profiles_my_profile_detail')
+                    else:
+                        adv['freshness'] = 'orange'
 
                 # some Ruby packages release multiple versions
                 # in the same day and HH:MM:SS is not available
@@ -533,25 +526,9 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
                 for adv in date_adv_map[d]:
                     sorted_adv.append(adv)
 
-            # used in template
-            installed_color = ""
-            installed_date_text = ""
-
-            if installed_released_on: # is not None
-                installed_date_text = installed_released_on.strftime('%Y-%m-%d')
-
-                if installed_released_on <= one_year_ago:
-                    installed_color = 'redfg'
-                    installed_date_text += " is 1+ year ago"
-                elif one_year_ago < installed_released_on <= six_months_ago:
-                    installed_color = 'orangefg'
-                    installed_date_text += " is 6+ months ago"
-
             packages.append({
                         'installed' : "%s-%s" % (package_name, package_version),
                         'installed_id' : inst_pk,
-                        'installed_color' : installed_color,
-                        'installed_date_text' : installed_date_text,
                         'advisories' : sorted_adv,
                     })
 
