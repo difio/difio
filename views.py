@@ -310,16 +310,6 @@ def dashboard(request):
                 apps_data[app]['outdated'] += 1
 
 
-    # number of old PVs without relation to app
-    year = datetime.now()-timedelta(days=365)
-    old_pvs = set(pv.pk for pv in PackageVersion.objects.filter(pk__in=installed_pvs).filter(released_on__lte=year).only('pk'))
-
-    # now count how many PVs for each app are released 1 year ago or earlier
-    for app in apps_data.keys():
-        for pv in apps_data[app]['installed_versions']:
-            if pv in old_pvs:
-                apps_data[app]['old'] += 1
-
     # clear data which is not needed by the template
     # to minimize memory usage by the template engine
 #todo: do we need this
