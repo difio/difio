@@ -1,6 +1,6 @@
 ################################################################################
 #
-#   Copyright (c) 2011-2013, Alexander Todorov <atodorov@nospam.dif.io>
+#   Copyright (c) 2011-2014, Alexander Todorov <atodorov@nospam.dif.io>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ urlpatterns = patterns('',
     url(r'^hook/rubygems/$', 'difio.views.hook_rubygems', name="hook_rubygem"), # Ruby
 
     # dashboard
-    url(r'^dashboard/$',        'difio.views.myapps_new',      name='dashboard'),
+    url(r'^dashboard/$', 'difio.views.dashboard', name='dashboard'),
 
     # apps management
     # NB: this is hard-coded in approve.js to redirect after app approval

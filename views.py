@@ -245,7 +245,7 @@ def ajax_delete_inst_pkg(request):
 # member pages
 
 @login_required
-def myapps_new(request):
+def dashboard(request):
     """
         Display applications owned by the current user.
         Include dependency info in the context!
