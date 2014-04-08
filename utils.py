@@ -437,6 +437,7 @@ def which_changelog(files):
         'changes.rst',
         'CHANGES.rst',
         'CHANGES.txt',
+        'changes.txt',
         'CHANGES.textile',
         'Changes.textile',
         'history.txt',
