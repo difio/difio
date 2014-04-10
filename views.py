@@ -427,6 +427,16 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
                             status=STATUS_LIVE
                         ).only('new', 'old')
 
+    # holds the PKs of installed packages for which
+    # analytics are not yet LIVE. This is used in templates to
+    # show the package is still being processed by the backend
+    in_progress_query = Advisory.objects.filter(
+                            old__in=installed_vers_pks,
+                            status__gte=STATUS_NEW,
+                            status__lt=STATUS_LIVE,
+                        ).only('old')
+    analytics_in_progress_for_inst_pkgs = set(adv.old_id for adv in in_progress_query)
+
     for adv in query:
         if not advisories.has_key(adv.old_id):
             advisories[adv.old_id] = []
@@ -520,6 +530,7 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
                         'installed' : "%s-%s" % (package_name, package_version),
                         'installed_id' : inst_pk,
                         'advisories' : sorted_adv,
+                        'in_progress' : inst_ver_pk in analytics_in_progress_for_inst_pkgs,
                     })
 
     # order by package name
@@ -559,7 +570,6 @@ def appdetails(request, id):
     """
         Display information about particular application.
     """
-
     # whether or not to show all packages or only these which need updates
     # by default will show only packages which need updates
     show_all = 1 # 2013-08-27 - always show all

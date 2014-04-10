@@ -78,8 +78,20 @@
     </tr>
 {% for p in page_context.object_list %}
     <tr id="i{{ p.installed_id }}">
-        <td class="dots center">{{ page_context.start_index|add:forloop.counter0 }}</td>
-        <td class="dots">{{ p.installed }}</td>
+        <td class="dots center">
+        {% if p.in_progress %}
+            <img src="{{ STATIC_URL }}i/loading_horiz.gif"
+                 title="Package analytics is in progress"
+                 alt="Analytics in progress"
+            />
+        {% else %}
+            {{ page_context.start_index|add:forloop.counter0 }}
+        {% endif %}
+        </td>
+        <td class="dots">
+        {{ p.installed }}
+        </td>
+
         <td class="dots">
             {% for adv in p.advisories %}
             <a class="{{ adv.freshness }} button micro_plus" title="Released on {{ adv.date|date:'d N Y' }}" href="{{ adv.url }}">{{ adv.new }}</a>&nbsp;
