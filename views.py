@@ -633,8 +633,8 @@ def previous_analytics(request, package, id):
         # show everything older than one month
         cut_off = datetime.now() - timedelta(days=30)
 
-
-
+#TODO: this query can be very slow if there are
+# large number of previous analytics available
     for adv in Advisory.objects.filter(
                                     old__package=id
                                 ).filter(
