@@ -89,7 +89,11 @@
         {% endif %}
         </td>
         <td class="dots">
-        {{ p.installed }}
+        {% if p.previous %}
+            <a href="{% fqdn_url 'previous_analytics' p.name p.package_pk %}" title="Click here to see previous analytics">{{ p.installed }}</a>
+        {% else %}
+            {{ p.installed }}
+        {% endif %}
         </td>
 
         <td class="dots">

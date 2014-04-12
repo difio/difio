@@ -466,6 +466,16 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
         ver_map[ver.pk] = ver.version
         released_on_map[ver.pk] = ver.released_on
 
+    # map for which packages there are previous analytics
+    previous_analytics_map = set()
+    for analytic in Advisory.objects.filter(
+                                        old__package__in=installed_pkgs_pks
+                                    ).values(
+                                        'old__package'
+                                    ).annotate(
+                                        count=Count('old__package')
+                                    ).filter(count__gt=0):
+        previous_analytics_map.add(analytic['old__package'])
 
     # build data structure for the template
     packages = []
@@ -526,12 +536,21 @@ def _appdetails_get_objects_fast(owner, app_id, show_all, page):   # FALSE NEGAT
                 for adv in date_adv_map[d]:
                     sorted_adv.append(adv)
 
-            packages.append({
+            data = {
                         'installed' : "%s-%s" % (package_name, package_version),
                         'installed_id' : inst_pk,
                         'advisories' : sorted_adv,
                         'in_progress' : inst_ver_pk in analytics_in_progress_for_inst_pkgs,
-                    })
+                    }
+            if (not data['advisories']) and (not data['in_progress']) and \
+                inst_pkg_pk in previous_analytics_map:
+                data['previous'] = True
+                data['name'] = package_name
+                data['package_pk'] = inst_pkg_pk
+            else:
+                data['previous'] = False
+
+            packages.append(data)
 
     # order by package name
     name_ver = {}
@@ -589,6 +608,56 @@ def appdetails(request, id):
     context['show_all'] = show_all
 
     return render(request, 'apps/details.html', context)
+
+@login_required
+def previous_analytics(request, package, id):
+    """
+        Return a list of previous analytics for the given package.
+        Only shows analytics which the user can access.
+        Also limits to the last 100 of them!
+    """
+    context = []
+    profile = request.user.get_profile()
+
+#TODO: this code block needs to go into a separate method
+# together with the cut-off logic in _appdetails_get_objects_fast()
+
+    if profile.is_subscribed():
+        if (profile.get_subscription_plan_name() == 'Beaker'):
+            # show everything
+            cut_off = datetime.now() 
+        else:
+            # show everything older than one week
+            cut_off = datetime.now() - timedelta(days=7)
+    else:
+        # show everything older than one month
+        cut_off = datetime.now() - timedelta(days=30)
+
+
+
+    for adv in Advisory.objects.filter(
+                                    old__package=id
+                                ).filter(
+                                    new__released_on__lte=cut_off,
+                                ).order_by(
+                                    '-new__released_on',
+                                    '-old__released_on'
+                                )[:100]:
+        context.append(
+            {
+                'name' : adv.__unicode__(),
+                'url'  : adv.get_full_path(),
+            }
+        )
+
+
+    return render(
+                request,
+                'previous_analytics.html',
+                {
+                    'context' : context
+                }
+            )
 
 
 @login_required

@@ -35,6 +35,7 @@ urlpatterns = patterns('',
 
     # /updates/django-1.3/django-1.3.1/245
     url(r'^%s/(?P<old>.*)/(?P<new>.*)/(?P<id>\d+)/$' % URL_ADVISORIES, 'difio.views.advisory', name='advisory'),
+    url(r'^analytics/(?P<package>.*)/(?P<id>\d+)/$', 'difio.views.previous_analytics', name='previous_analytics'),
 
     # AJAX API
     url(r'^ajax/update/app/name/$', 'difio.views.ajax_update_app_name', name='ajax_update_app_name'),

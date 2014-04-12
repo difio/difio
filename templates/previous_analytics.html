@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load fqdn_url from fqdn_url %}
+{% block title %}Previous analytics{% endblock %}
+
+{% block content-top %}
+<div id="content_top" style="min-height:30px;">
+    <div class="toplevel" style="float:left;">
+        <h2 style="margin:0;">Previous analytics</h2>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for obj in context %}
+    <li>
+        <a href="{{ obj.url }}">{{ obj.name }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock %}
