@@ -636,8 +636,8 @@ def previous_analytics(request, package, id):
 #TODO: this query can be very slow if there are
 # large number of previous analytics available
     for adv in Advisory.objects.filter(
-                                    old__package=id
-                                ).filter(
+                                    status=STATUS_LIVE,
+                                    old__package=id,
                                     new__released_on__lte=cut_off,
                                 ).order_by(
                                     '-new__released_on',
