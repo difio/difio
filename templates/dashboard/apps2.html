@@ -26,10 +26,16 @@ You don't have any applications yet!
                     <span class="url"><a href="{{ a.url|safe}}">{{ a.url|safe }}</a></span>
                     <br/>
                     <span>
+                        {% if a.status == 5 %}
+                        <span class="redfg">
+                            Last check-in more than a year ago. Analytics will be inaccurate!
+                        </span>
+                        {% else %}
                         <span class="{% if a.outdated == 0 %}greenfg{% else %}redfg{% endif %}">
                             {{ a.outdated }}
                         </span> of <span class="grayfg">{{ a.total }}</span> packages
                         are outdated!
+                        {% endif %}
                     </span>
                 </div>
             </div>

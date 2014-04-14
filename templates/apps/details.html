@@ -60,6 +60,14 @@
 {% endif %}
         </td>
     </tr>
+    {% if app.status == 5 %}
+    <tr>
+        <th class="vertical red">SUSPENDED</th>
+        <td>
+            <em>Update Package List</em> to resolve this!
+        </td>
+    </tr>
+    {% endif %}
 </table>
 
         </div>
