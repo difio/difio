@@ -487,13 +487,6 @@ def pv_import_new_from_rss(pkg_type, name, version, released_on):
         pv = PackageVersion.objects.create(package=package, version=version, released_on=released_on)
         logger.info("Imported new PV: %s" % pv)
 
-        # search URLs now, after at least one version is imported
-        # fails otherwise b/c no versions exist
-# disabled: executed in compare_versions_and_create_advisory()
-#        if is_new_package:
-#            cron_find_homepages(package.id) # NB: no delay
-
-
         if not released_on:
             # NB: NO DELAY HERE b/c there's a race condition between pv_find_date() and
             # ver_date_cmp() in compare_versions_and_create_advisory() below if delayed
