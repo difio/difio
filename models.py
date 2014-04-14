@@ -105,6 +105,7 @@ APP_STATUS_PENDING=0
 
 # NB: Always keep working states > 0
 # since the UI hard codes this
+APP_STATUS_SUSPENDED=5
 APP_STATUS_APPROVED=10
 APP_STATUS_UPTODATE=20
 APP_STATUS_NEEDSUPDATE=30
@@ -113,6 +114,7 @@ STATUS_TYPES = (
     (APP_STATUS_REMOVED, 'Removed'),
     (APP_STATUS_IMPORTING, 'Importing'),
     (APP_STATUS_PENDING, 'Pending'),
+    (APP_STATUS_SUSPENDED, 'Suspended'),
     (APP_STATUS_APPROVED, 'Approved'),
     (APP_STATUS_UPTODATE, 'Up to date'),
     (APP_STATUS_NEEDSUPDATE, 'Needs update'),

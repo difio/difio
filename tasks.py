@@ -1052,23 +1052,6 @@ def cron_move_advisories_to_live():
 
     reset_queries()
 
-@task
-def cron_update_application_status():
-    """
-        Set application status to NEEDSUPDATE or UPTODATE.
-        Executed by CRON.
-    """
-    logger = cron_update_application_status.get_logger()
-    logger.info("Changing application statuses")
-
-    # only select apps that are APPROVED, UPTODATE or NEEDSUPDATE
-    query = Application.objects.filter(status__in=[APP_STATUS_APPROVED, APP_STATUS_UPTODATE, APP_STATUS_NEEDSUPDATE])
-
-    for app in query:
-        update_application_status.delay(app.id)
-
-    reset_queries()
-
 
 @task
 def update_application_status(id, status=None):
@@ -1086,8 +1069,8 @@ def update_application_status(id, status=None):
     except IndexError:
         return
 
-    # if removed in the mean time
-    if app.status <= APP_STATUS_PENDING:
+    # if removed or suspended in the mean time
+    if app.status <= APP_STATUS_SUSPENDED:
         return
 
     status_is_updated = False
