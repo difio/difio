@@ -328,7 +328,7 @@ def compare_versions_and_create_advisory(installed, upstream):
     """
         Given two versions compare them and create advisory if needed.
 
-        @installed - installed PV
+        @installed - an installed PV
         @upstream - newly found PV which supposedly is the latest version
     """
     logger = compare_versions_and_create_advisory.get_logger()
@@ -341,6 +341,14 @@ def compare_versions_and_create_advisory(installed, upstream):
         # update this package so it's not checked again very soon
         Package.objects.filter(pk=installed.package_id).update(last_checked=datetime.now())
         return
+
+    # skip unapproved apps, analytics for them will be created once the app
+    # is approved by the user
+    apps_pks = set(inst.application for inst in InstalledPackage.objects.filter(version=installed.pk).only('application'))
+    count = Application.objects.filter(pk__in=apps_pks, status__gte=APP_STATUS_APPROVED).count()
+    if count == 0:
+        return
+
 
     # if installed has no released_on date (e.g. newly imported package)
     # then try to find date because version compare will fail otherwise
