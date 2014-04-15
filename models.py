@@ -518,7 +518,7 @@ class Package(models.Model):
     subpackage_path = models.CharField(max_length=256, null=True, blank=True)
 
     # when added to DB. used internally wrt manual Package additions
-    added_on = models.DateTimeField(db_index=True, default=datetime.now())
+    added_on = models.DateTimeField(db_index=True, default=datetime.now)
 
     def __unicode__(self):
         return unicode(self.name)
@@ -595,7 +595,7 @@ class PackageVersion(models.Model):
     size = models.IntegerField('Size in bytes', default=None, null=True, blank=True)
 
     # when added to DB. used internally wrt manual PackageVersion additions
-    added_on = models.DateTimeField(db_index=True, default=datetime.now())
+    added_on = models.DateTimeField(db_index=True, default=datetime.now)
 
     def __unicode__(self):
         return unicode("%s-%s" % (self.package, self.version))
