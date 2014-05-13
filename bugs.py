@@ -93,17 +93,17 @@ BUG_TYPE_WINCENT = 19
 def extract_github(title, soup):
     title = soup.body.findAll('span', attrs={'class':"js-issue-title"})[0].text
 
-    reported_on = soup.body.findAll('local-time')[0]['datetime'][:19]
+    reported_on = soup.body.findAll('time')[0]['datetime'][:19]
     reported_on = datetime.strptime(reported_on, '%Y-%m-%dT%H:%M:%S')
 
     last_comment_on = None
-    for time in soup.body.findAll('local-time'):
+    for time in soup.body.findAll('time'):
         last_comment_on = time['datetime'][:19]
 
     closed_on = None
     for div in soup.body.findAll('div'):
         if div.text.find('closed this') > -1:
-            for time in div.findAll('local-time'):
+            for time in div.findAll('time'):
                 closed_on = time['datetime'][:19]
             break
         elif div.text.find('closed') > -1:
