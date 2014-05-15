@@ -955,8 +955,12 @@ def application_register(request, import_data=None, skip_user=False):
                                     'pk',
                                     'name',
                                     'url',
+                                    'status',
                                     'type'
                                 )[0]
+
+        # needed in case app is SUSPENDED to update the status later
+        data['app_status'] = app.status
 
         # in case of manual import name/url is CHANGE ME/example.com
         # if previously registered then keep what has been manually configured

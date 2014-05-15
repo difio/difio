@@ -1959,6 +1959,12 @@ def import_application(app_pk, app_uuid, owner_pk, is_manual_import, is_first_im
         # all import/delete done. set proper app status
         Application.objects.filter(pk=app_pk).update(status=status_tobe)
     else: # existing application
+        # if application has been previously SUSPENDED then
+        # mark it as APPROVED so that helper_search_new_data() -> update_application_status()
+        # will set the correct status later
+        if data.has_key('app_status') and (data['app_status'] == APP_STATUS_SUSPENDED):
+            Application.objects.filter(pk=app_pk).update(status=APP_STATUS_APPROVED)
+
         if data['name_url_type_changed']: # these can change, although rarely
             Application.objects.filter(
                         pk=app_pk
