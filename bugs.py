@@ -261,7 +261,11 @@ def extract_trac(title, soup):
         reported_on = div.p.a['title']
         if reported_on.find('See timeline at') > -1: # Django Trac
             reported_on = reported_on.replace('See timeline at', '').strip()
-            reported_on = datetime.strptime(reported_on, '%m/%d/%y %H:%M:%S')
+            reported_on = reported_on[:19]
+            try:
+                reported_on = datetime.strptime(reported_on, '%m/%d/%y %H:%M:%S')
+            except:
+                reported_on = datetime.strptime(reported_on, '%m/%d/%Y %H:%M:%S')
         else:
             reported_on = reported_on[:19]
             reported_on = datetime.strptime(reported_on, '%Y-%m-%dT%H:%M:%S')
@@ -275,7 +279,11 @@ def extract_trac(title, soup):
                         closed_on = a['title']
                         if closed_on.find('See timeline at') > -1: # Django Trac
                             closed_on = closed_on.replace('See timeline at', '').strip()
-                            closed_on = datetime.strptime(closed_on, '%m/%d/%y %H:%M:%S')
+                            closed_on = closed_on[:19]
+                            try:
+                                closed_on = datetime.strptime(closed_on, '%m/%d/%y %H:%M:%S')
+                            except:
+                                closed_on = datetime.strptime(closed_on, '%m/%d/%Y %H:%M:%S')
                         else:
                             closed_on = closed_on[:19]
                             closed_on = datetime.strptime(closed_on, '%Y-%m-%dT%H:%M:%S')
@@ -650,12 +658,12 @@ if __name__ == "__main__":
 # NB: order is the same as in extract_title_and_dates_from_html()
 
 
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/cowboyd/therubyracer/pull/240'), BUG_TYPE_GITHUB)
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/boto/boto/issues/1757'), BUG_TYPE_GITHUB)
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/marcandre/backports/pull/63'), BUG_TYPE_GITHUB)
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/boto/boto/pull/407'), BUG_TYPE_GITHUB)
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/hmarr/django-ses/pull/40'), BUG_TYPE_GITHUB)
-    print extract_title_and_dates_from_html(fetch_page('https://github.com/schacon/hg-git/issues/31'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/cowboyd/therubyracer/pull/240'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/boto/boto/issues/1757'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/marcandre/backports/pull/63'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/boto/boto/pull/407'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/hmarr/django-ses/pull/40'), BUG_TYPE_GITHUB)
+#    print extract_title_and_dates_from_html(fetch_page('https://github.com/schacon/hg-git/issues/31'), BUG_TYPE_GITHUB)
 
 #    print extract_title_and_dates_from_html(fetch_page('https://bugzilla.redhat.com/show_bug.cgi?id=800754'), BUG_TYPE_BUGZILLA)
 
@@ -669,9 +677,8 @@ if __name__ == "__main__":
 #    print extract_title_and_dates_from_html(fetch_page('http://code.google.com/p/geopy/issues/detail?id=2'), BUG_TYPE_GOOGLE)
 
 
-#    print extract_title_and_dates_from_html(fetch_page('http://www.sqlalchemy.org/trac/ticket/695'), BUG_TYPE_TRAC)
-#    print extract_title_and_dates_from_html(fetch_page('http://www.sqlalchemy.org/trac/ticket/1635'), BUG_TYPE_TRAC)
-#    print extract_title_and_dates_from_html(fetch_page('https://code.djangoproject.com/ticket/18436'), BUG_TYPE_TRAC)
+    print extract_title_and_dates_from_html(fetch_page('http://foolscap.lothar.com/trac/ticket/204'), BUG_TYPE_TRAC)
+    print extract_title_and_dates_from_html(fetch_page('https://code.djangoproject.com/ticket/18436'), BUG_TYPE_TRAC)
 
 
 #    print extract_title_and_dates_from_html(fetch_page('http://bugs.repoze.org/issue4'),  BUG_TYPE_ROUNDUP)
